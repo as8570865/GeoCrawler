@@ -1,7 +1,5 @@
 package ray.geocrawler.dao;
 
-import java.util.List;
-
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,7 +14,7 @@ public class TaskDaoImpl extends GeoDataDao<Task> {
 		this.jdbcTemplate = new JdbcTemplate(ds);
 		this.rowMapper=new TaskMapper();
 		this.geoDataType=dataType;
-		System.out.println("geoDataType= "+geoDataType);
+		
 	}
 
 }

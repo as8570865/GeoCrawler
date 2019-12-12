@@ -5,7 +5,9 @@
 http://www.springframework.org/schema/beans
 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 http://www.springframework.org/schema/context
-http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/util
+http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<context:component-scan
 		base-package="ray.geocrawler.controller" />
@@ -33,9 +35,10 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 		<property name="username" value="root" />
 		<property name="password" value="" />
 	</bean>
-	
+
 	<!-- other beans -->
-	<import resource="classpath:daoBeans.xml"/>
-	<import resource="classpath:controllerBeans.xml"/>
+	<import resource="classpath:daoBeans.xml" />
+	<import resource="classpath:controllerBeans.xml" />
+	<import resource="classpath:tablePropertiesBeans.xml" />
 
 </beans>

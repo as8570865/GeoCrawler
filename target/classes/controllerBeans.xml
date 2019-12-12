@@ -9,32 +9,34 @@ http://www.springframework.org/schema/context
 http://www.springframework.org/schema/context/spring-context-3.0.xsd
 http://www.springframework.org/schema/util
 http://www.springframework.org/schema/util/spring-util-2.5.xsd">
-	
-	<!-- Inject ResourceDaoImpl to resourceController  -->
-	<bean id="resourceController"
-		class="ray.geocrawler.controller.ResourceController">
-		<property name = "geoDataDao" ref="resourceDaoImpl" />
+
+	<!-- Inject init Table Controller -->
+	<bean id="initTableController"
+		class="ray.geocrawler.controller.InitTableController">		
+		<property name="tableSchemaMap" ref="tableSchemaMap" />
+		<property name="geoTypeList" ref="geoTypeList" />		
+	</bean>
+
+	<!-- Inject test controller -->
+	<bean id="testController"
+		class="ray.geocrawler.controller.TestController">		
+		<property name="daoMap">
+			<map>
+				<entry key="resource" value-ref="resourceDaoImpl"></entry>
+				<entry key="task" value-ref="taskDaoImpl"></entry>
+			</map>
+		</property>		
 	</bean>
 	
-	<!-- Inject taskDaoImpl to taskController  
-	<bean id="taskController"
-		class="ray.geocrawler.controller.TaskController">
-		<property name = "geoDataDao" ref="taskDaoImpl" />
-	</bean>-->
-
-	<!-- createTableController 
-	<bean id="createTableController"
-		class="ray.geocrawler.controller.CreateTableController">
-		<property name = "resourceDao" ref="resourceDaoImpl" />
-		<property name = "geoTypeList" ref="geoTypeList" />
-	</bean>-->
-
-	<!-- geoType list 
-	<util:list id="geoTypeList" value-type="java.lang.String">
-		<value>sos</value>
-		<value>wms</value>
-		<value>wps</value>
-		<value>wcs</value>
-	</util:list>-->
+	<!-- Inject geoData controller -->
+	<bean id="geoDataController"
+		class="ray.geocrawler.controller.GeoDataController">		
+		<property name="daoMap">
+			<map>
+				<entry key="resource" value-ref="resourceDaoImpl"></entry>
+				<entry key="task" value-ref="taskDaoImpl"></entry>
+			</map>
+		</property>		
+	</bean>
 
 </beans>

@@ -7,39 +7,46 @@ import org.springframework.jdbc.core.RowMapper;
 
 import ray.geocrawler.model.GeoData;
 
-public abstract class GeoDataDao <T extends GeoData> {
-	
-	//set in constructor
+public abstract class GeoDataDao<T extends GeoData> {
+
+	// set in constructor
 	protected RowMapper<T> rowMapper;
 	protected String geoDataType;
 	protected JdbcTemplate jdbcTemplate;
-	
-	//set in setGeoType
+
+	// set in setGeoType
 	protected String geoType;
 	protected String tableName;
+	
+	//set in setTableSchema
+	String tableSchema;
 
 	public void setGeoType(String geoType) {
 		this.geoType = geoType;
-		tableName=geoDataType+"_"+geoType;
-		//System.out.println("setting geoType in resourceDaoImpl ");
+		tableName = geoDataType + "_" + geoType;
+		// System.out.println("setting geoType in resourceDaoImpl ");
+	}
+	
+	public void setTableSchema(String tableSchema) {
+		this.tableSchema=tableSchema;
 	}
 
 	public void insert(T rs) {
 		String sql = "insert into " + tableName + "(link)value('" + rs.getLink() + "')";
 		jdbcTemplate.execute(sql);
-		//System.out.println("inserting resource: " + rs.toString());
+		// System.out.println("inserting resource: " + rs.toString());
 	}
 
 	public T get(int id) {
 		String sql = "select* from " + tableName + " where id=?";
-		T geoData=jdbcTemplate.queryForObject(sql, new Object[]{id}, rowMapper);
+		T geoData = jdbcTemplate.queryForObject(sql, new Object[] { id }, rowMapper);
 		geoData.setGeoType(geoType);
 		return geoData;
 	}
 
 	public List<T> getAll() {
-		String sql = "select* from " + tableName ;		
-		return jdbcTemplate.query(sql,rowMapper);
+		String sql = "select* from " + tableName;
+		return jdbcTemplate.query(sql, rowMapper);
 	}
 
 	public void delete(int id) {
@@ -48,12 +55,11 @@ public abstract class GeoDataDao <T extends GeoData> {
 	}
 
 	public void init() {
-
-		//System.out.println("checking " + geoType + " resource table...");
-		String sql = "create table if not exists " + tableName
-				+ "( id	int not null auto_increment primary key, link text not null)";
+		// System.out.println("checking " + geoType + " resource table...");
+		//String checkTableExists = "show tables like '" + this.tableName + "'";
+		String sql = "CREATE TABLE IF NOT EXISTS " + this.tableName
+				+ "("+tableSchema+");";
 		jdbcTemplate.execute(sql);
-		
 
 	}
 }

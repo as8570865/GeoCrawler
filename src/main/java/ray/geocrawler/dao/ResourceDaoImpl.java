@@ -16,11 +16,4 @@ public class ResourceDaoImpl extends GeoDataDao<Resource> {
 		this.geoDataType = dataType;
 	}
 
-	public void init() {
-		// System.out.println("checking " + geoType + " resource table...");
-		String sql = "create table if not exists " + this.tableName
-				+ "( id	int not null auto_increment primary key, link text not null)";
-		jdbcTemplate.execute(sql);
-
-	}
 }
