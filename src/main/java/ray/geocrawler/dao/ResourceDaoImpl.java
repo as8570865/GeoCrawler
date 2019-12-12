@@ -1,53 +1,26 @@
 package ray.geocrawler.dao;
 
-import java.util.List;
-
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 import ray.geocrawler.model.Resource;
 
-public class ResourceDaoImpl implements ResourceDao {
+public class ResourceDaoImpl extends GeoDataDao<Resource> {
 
-	private JdbcTemplate jdbcTemplate;
-	private String geoType;
-	
-	public ResourceDaoImpl(DataSource ds,String geoType) {
+	private final static String dataType = "resource";
+
+	public ResourceDaoImpl(DataSource ds) {
 		this.jdbcTemplate = new JdbcTemplate(ds);
-		this.geoType=geoType;
-		System.out.println("in resourceDaoImpl constructor");
+		this.rowMapper = new ResourceMapper();
+		this.geoDataType = dataType;
 	}
 
-	public void insertResource(Resource rs) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public Resource getResource(int id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public List<Resource> getResources() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void deleteResource(int id) {
-		// TODO Auto-generated method stub
-
-	}
-	
 	public void init() {
-		
-		System.out.println("starting init...");
-        String sql = "create table if not exists resource_"+geoType
-        		+"( id	int not null auto_increment primary key,"
-        		+ "url text not null)";
-        jdbcTemplate.execute(sql);
-		
-	}
+		// System.out.println("checking " + geoType + " resource table...");
+		String sql = "create table if not exists " + this.tableName
+				+ "( id	int not null auto_increment primary key, link text not null)";
+		jdbcTemplate.execute(sql);
 
+	}
 }

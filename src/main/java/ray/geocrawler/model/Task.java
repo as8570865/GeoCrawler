@@ -1,5 +1,7 @@
 package ray.geocrawler.model;
 
+import org.json.JSONObject;
+
 public class Task extends GeoData {
 	boolean status;
 	int level;
@@ -25,8 +27,33 @@ public class Task extends GeoData {
 
 	@Override
 	public String toString() {
+		if (id == 0)
+			return "Task [status=" + status + ", level=" + level + ", geoType=" + geoType + ", link="
+					+ link + "]";
 		return "Task [status=" + status + ", level=" + level + ", id=" + id + ", geoType=" + geoType + ", link=" + link
 				+ "]";
+	}
+	
+	@Override
+	public String toJsonString() {
+		return null;
+	}
+
+	
+	public boolean isStatus() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 }

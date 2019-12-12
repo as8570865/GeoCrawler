@@ -1,5 +1,8 @@
 package ray.geocrawler.model;
 
+import org.json.JSONObject;
+import org.json.JSONString;
+
 public abstract class GeoData {
 	protected int id;
 	protected String geoType;
@@ -7,6 +10,10 @@ public abstract class GeoData {
 	
 	public GeoData() {
 		
+	}
+
+	public GeoData(JSONObject jsonObj) {
+		this.link=jsonObj.getString("link");
 	}
 
 	public int getId() {
@@ -33,9 +40,10 @@ public abstract class GeoData {
 		this.link = link;
 	}
 
-	
 	@Override
 	public abstract String toString() ;
+	
+	public abstract String toJsonString() ;
 	
 	
 	
