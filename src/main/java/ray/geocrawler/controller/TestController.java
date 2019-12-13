@@ -12,20 +12,20 @@ import ray.geocrawler.dao.GeoDataDao;
 @Controller
 public class TestController {
 
-	Map<String, GeoDataDao>daoMap;
-	
-	public void setDaoMap(Map<String, GeoDataDao>daoMap) {
-		this.daoMap=daoMap;
-	}
-	
-	@RequestMapping(value = "/{geoDataType}/{geoType}/test", method = RequestMethod.GET)
-	public void init(@PathVariable("geoType") String geoType,@PathVariable("geoDataType") String geoDataType) {
-			
-		GeoDataDao rDao=daoMap.get(geoDataType);
-		rDao.setGeoType(geoType);
-		rDao.init();
-		
-	}
+//	Map<String, GeoDataDao>daoMap;
+//	
+//	public void setDaoMap(Map<String, GeoDataDao>daoMap) {
+//		this.daoMap=daoMap;
+//	}
+//	
+//	@RequestMapping(value = "/{geoDataType}/{geoType}/test", method = RequestMethod.GET)
+//	public void init(@PathVariable("geoType") String geoType,@PathVariable("geoDataType") String geoDataType) {
+//			
+//		GeoDataDao rDao=daoMap.get(geoDataType);
+//		rDao.setGeoType(geoType);
+//		rDao.init("123");
+//		
+//	}
 	
 
 }

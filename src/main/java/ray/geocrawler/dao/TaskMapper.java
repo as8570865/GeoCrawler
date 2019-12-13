@@ -14,7 +14,7 @@ public class TaskMapper implements RowMapper<Task>{
 		task.setId(rs.getInt("id"));
 		task.setLink(rs.getString("link"));
 		task.setLevel(rs.getInt("level"));
-		task.setStatus(rs.getBoolean("status"));
+		task.setRunning(rs.getBoolean("status"));
 		return task;
 	}
 

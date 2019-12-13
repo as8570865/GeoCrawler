@@ -8,18 +8,22 @@
            http://www.springframework.org/schema/util 
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<util:map id="tableSchemaMap" map-class="java.util.HashMap"
-		key-type="java.lang.String" value-type="java.lang.String">
-		<entry key="resource"
-			value="id int not null auto_increment primary key, link text not null" />
-		<entry key="task"
-			value="id int not null auto_increment primary key, link text not null, level int not null, status boolean" />
-	</util:map>
+	<util:list id="sosList" value-type="java.lang.String">
+		<value>sos service</value>
+		<value>sos server</value>
+		<value>sos web</value>
+	</util:list>
 
-	<util:list id="geoTypeList" value-type="java.lang.String">
-		<value>sos</value>
-		<value>wms</value>
-		<value>wts</value>		
+	<util:list id="wmsList" value-type="java.lang.String">
+		<value>wms service</value>
+		<value>wms server</value>
+		<value>wms web</value>
+	</util:list>
+
+	<util:list id="wtsList" value-type="java.lang.String">
+		<value>wts service</value>
+		<value>wts server</value>
+		<value>wts web</value>
 	</util:list>
 
 </beans>

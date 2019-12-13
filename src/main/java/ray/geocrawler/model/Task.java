@@ -3,7 +3,7 @@ package ray.geocrawler.model;
 import org.json.JSONObject;
 
 public class Task extends GeoData {
-	boolean status;
+	boolean running;
 	int level;
 
 	public Task() {
@@ -11,41 +11,44 @@ public class Task extends GeoData {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Task(int id, String geoType, String link, boolean status, int level) {
+	public Task(JSONObject jsonObj) {
+		super(jsonObj);
+		this.level = jsonObj.getInt("level");
+	}
+
+	public Task(int id, String geoType, String link, boolean running, int level) {
 		this.id = id;
 		this.geoType = geoType;
 		this.link = link;
-		this.status = status;
+		this.running = running;
 		this.level = level;
 	}
 
-	public Task(String geoType, String link, int level) {
-		this.geoType = geoType;
-		this.link = link;
-		this.level = level;
+	public Task(String link,int level) {
+		this.link=link;
+		this.level=level;
+		
 	}
 
 	@Override
 	public String toString() {
 		if (id == 0)
-			return "Task [status=" + status + ", level=" + level + ", geoType=" + geoType + ", link="
-					+ link + "]";
-		return "Task [status=" + status + ", level=" + level + ", id=" + id + ", geoType=" + geoType + ", link=" + link
-				+ "]";
+			return "Task [running=" + running + ", level=" + level + ", geoType=" + geoType + ", link=" + link + "]";
+		return "Task [running=" + running + ", level=" + level + ", id=" + id + ", geoType=" + geoType + ", link="
+				+ link + "]";
 	}
-	
+
 	@Override
 	public String toJsonString() {
 		return null;
 	}
 
-	
-	public boolean isStatus() {
-		return status;
+	public boolean isRunning() {
+		return running;
 	}
 
-	public void setStatus(boolean status) {
-		this.status = status;
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 
 	public int getLevel() {

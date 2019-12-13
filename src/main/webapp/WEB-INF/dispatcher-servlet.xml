@@ -40,5 +40,7 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<import resource="classpath:daoBeans.xml" />
 	<import resource="classpath:controllerBeans.xml" />
 	<import resource="classpath:tablePropertiesBeans.xml" />
+	<import resource="classpath:serviceBeans.xml" />
+	<import resource="classpath:seedsBeans.xml" />
 
 </beans>

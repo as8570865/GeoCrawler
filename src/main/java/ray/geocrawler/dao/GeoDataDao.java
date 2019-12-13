@@ -17,24 +17,14 @@ public abstract class GeoDataDao<T extends GeoData> {
 	// set in setGeoType
 	protected String geoType;
 	protected String tableName;
-	
-	//set in setTableSchema
-	String tableSchema;
 
+	//abstract methods
+	abstract public void insert(T GeoData) ;
+	
 	public void setGeoType(String geoType) {
 		this.geoType = geoType;
 		tableName = geoDataType + "_" + geoType;
 		// System.out.println("setting geoType in resourceDaoImpl ");
-	}
-	
-	public void setTableSchema(String tableSchema) {
-		this.tableSchema=tableSchema;
-	}
-
-	public void insert(T rs) {
-		String sql = "insert into " + tableName + "(link)value('" + rs.getLink() + "')";
-		jdbcTemplate.execute(sql);
-		// System.out.println("inserting resource: " + rs.toString());
 	}
 
 	public T get(int id) {
@@ -54,7 +44,7 @@ public abstract class GeoDataDao<T extends GeoData> {
 
 	}
 
-	public void init() {
+	public void init(String tableSchema) {
 		// System.out.println("checking " + geoType + " resource table...");
 		//String checkTableExists = "show tables like '" + this.tableName + "'";
 		String sql = "CREATE TABLE IF NOT EXISTS " + this.tableName
