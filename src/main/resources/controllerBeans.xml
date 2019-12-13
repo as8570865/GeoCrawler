@@ -10,12 +10,11 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd
 http://www.springframework.org/schema/util
 http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
-	<!-- Inject init Table Controller -->
+	<!-- Inject init Table Controller 
 	<bean id="initTableController"
 		class="ray.geocrawler.controller.InitTableController">		
-		<property name="tableSchemaMap" ref="tableSchemaMap" />
-		<property name="geoTypeList" ref="geoTypeList" />		
-	</bean>
+			
+	</bean>-->
 
 	<!-- Inject test controller -->
 	<bean id="testController"
@@ -36,7 +35,9 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 				<entry key="resource" value-ref="resourceDaoImpl"></entry>
 				<entry key="task" value-ref="taskDaoImpl"></entry>
 			</map>
-		</property>		
+		</property>
+		<property name="tableSchemaMap" ref="tableSchemaMap" />
+		<property name="geoTypeList" ref="geoTypeList" />			
 	</bean>
 
 </beans>

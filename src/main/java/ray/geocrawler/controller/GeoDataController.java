@@ -24,11 +24,40 @@ public class GeoDataController {
 	
 	protected Map<String, GeoDataDao> daoMap;
 	protected GeoDataDao geoDataDao;
+	
+	//for init table
+	private Map<String, String> tableSchemaMap;
+	private List<String> geoTypeList;
 
 	public void setDaoMap(Map<String, GeoDataDao> daoMap) {
 		this.daoMap = daoMap;
 	}
 
+	public void setTableSchemaMap(Map<String, String> tableSchemaMap) {
+		this.tableSchemaMap = tableSchemaMap;
+
+	}
+
+	public void setGeoTypeList(List<String> ls) {
+		this.geoTypeList = ls;
+	}
+	
+	@RequestMapping(value = "/init", produces = "application/json")
+	public @ResponseBody String init() {
+		GeoDataDao rDao = this.daoMap.get("resource");
+		GeoDataDao tDao = this.daoMap.get("task");
+		rDao.setTableSchema(tableSchemaMap.get("resource"));
+		tDao.setTableSchema(tableSchemaMap.get("task"));
+		for (String geoType : geoTypeList) {
+			rDao.setGeoType(geoType);
+			tDao.setGeoType(geoType);
+			rDao.init();
+			tDao.init();
+		}
+		
+		return "successfully initialized!";
+	}
+	
 	@RequestMapping(value = "/{geoType}/{geoDataType}", produces = "application/json")
 	public @ResponseBody String get(@RequestParam(value = "id", required = false) Integer id,
 			@PathVariable("geoType") String geoType,@PathVariable("geoDataType") String geoDataType) {
@@ -80,4 +109,5 @@ public class GeoDataController {
 
 	}
 
+	
 }
