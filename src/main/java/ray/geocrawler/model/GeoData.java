@@ -5,9 +5,20 @@ import org.json.JSONString;
 
 public abstract class GeoData {
 	protected int id;
+	protected int level;
 	protected String geoType;
 	protected String link;
 	
+	protected static String DATA_TYPE;
+	
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
 	public GeoData() {
 		
 	}
@@ -45,6 +56,7 @@ public abstract class GeoData {
 	
 	public abstract String toJsonString() ;
 	
+	public abstract String getDataType();
 	
 	
 }

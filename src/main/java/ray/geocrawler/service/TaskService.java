@@ -4,24 +4,18 @@ import java.util.List;
 import java.util.Map;
 
 import ray.geocrawler.dao.GeoDataDao;
+import ray.geocrawler.model.GeoData;
 import ray.geocrawler.model.Resource;
 import ray.geocrawler.model.Task;
 
 public interface TaskService {
 	
-	public void setDaoMap(Map<String, GeoDataDao> daoMap) ;
-
-	public void setSeedMap( Map<String, List<String>> seedMap) ;
-
-	public void setTableSchemaMap(Map<String, String> tableSchemaMap) ;
-
-	public void setGeoTypeList(List<String> geoTypeList) ;
+	public void setGeoType(String geoType);
 
 	public void init() ;
 	
-	public Task getNext(String geoType,int id);
+	public Task getNext(String geoType,Task task);
 	
-	public void postTask(List<Task> taskList);
+	public void post(String geoType,Task task,List<GeoData> geoDataList);
 	
-	public void postResource(Resource resource);
 }

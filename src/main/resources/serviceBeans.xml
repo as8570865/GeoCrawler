@@ -11,15 +11,9 @@
 	<!-- Inject task service -->
 	<bean id="taskServiceImpl"
 		class="ray.geocrawler.service.TaskServiceImpl">
-		<property name="daoMap">
-			<map>
-				<entry key="resource" value-ref="resourceDaoImpl"></entry>
-				<entry key="task" value-ref="taskDaoImpl"></entry>
-			</map>
-		</property>
-		<property name="tableSchemaMap" ref="tableSchemaMap" />
-		<property name="geoTypeList" ref="geoTypeList" />
-		<property name="seedMap" ref="seedMap" />
+		<constructor-arg index="0" ref="daoMap" />
+		<constructor-arg index="1" ref="seedMap" />
+		<constructor-arg index="2" ref="tableSchemaMap" />
 	</bean>
 
 	<!-- seeds map -->
@@ -28,6 +22,13 @@
 		<entry key="sos" value-ref="sosList" />
 		<entry key="wms" value-ref="wmsList" />
 		<entry key="wts" value-ref="wtsList" />
+	</util:map>
+	
+	<!-- dao map -->
+	<util:map id="daoMap" map-class="java.util.HashMap"
+		key-type="java.lang.String" value-type="ray.geocrawler.dao.GeoDataDao">
+		<entry key="task" value-ref="taskDaoImpl" />
+		<entry key="resource" value-ref="resourceDaoImpl" />
 	</util:map>
 
 </beans>

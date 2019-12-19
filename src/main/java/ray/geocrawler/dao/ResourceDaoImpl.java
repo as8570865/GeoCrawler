@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 
 import ray.geocrawler.model.Resource;
 
-public class ResourceDaoImpl extends GeoDataDaoAbst<Resource> {
+public class ResourceDaoImpl extends ResourceDao {
 
 	public ResourceDaoImpl(DataSource ds, String dataType) {
 		super(ds, dataType);
@@ -39,9 +39,15 @@ public class ResourceDaoImpl extends GeoDataDaoAbst<Resource> {
 	}
 
 	public void insert(Resource rs) {
-		String sql = "insert into " + tableName + "(link)value('" + rs.getLink() + "')";
+		String sql = "insert into " + tableName + "(link,level)values('" + rs.getLink() + "',"+rs.getLevel()+")";
 		jdbcTemplate.execute(sql);
 		// System.out.println("inserting resource: " + rs.toString());
+	}
+
+
+	public boolean containsLink(String link) {
+		String sql = "select exists (select 1 from " + this.tableName + " where link = '" + link + "')";
+		return jdbcTemplate.queryForObject(sql, boolean.class);
 	}
 
 }

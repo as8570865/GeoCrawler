@@ -4,7 +4,6 @@ import org.json.JSONObject;
 
 public class Task extends GeoData {
 	boolean running;
-	int level;
 
 	public Task() {
 		super();
@@ -47,12 +46,10 @@ public class Task extends GeoData {
 		this.running = running;
 	}
 
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
+	@Override
+	public String getDataType() {
+		// TODO Auto-generated method stub
+		return "task";
 	}
 
 }

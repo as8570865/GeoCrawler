@@ -10,30 +10,13 @@ public class TaskDaoImpl extends TaskDao {
 
 	public TaskDaoImpl(DataSource ds, String geoDataType) {
 		super(ds, geoDataType);
-		System.out.println("geodataType= "+geoDataType);
+		System.out.println("geodataType= " + geoDataType);
 	}
 
 	public void insert(Task task) {
 		String sql = "insert into " + tableName + "(link,level)values('" + task.getLink() + "','" + task.getLevel()
 				+ "')";
 		jdbcTemplate.execute(sql);
-	}
-
-	// haven't tested
-	// only update status in task
-	@Override
-	public void update(Task task) {
-		String sql = "UPDATE " + this.tableName + " SET status=" + task.isRunning() + " WHERE id=" + task.getId() + ";";
-		jdbcTemplate.execute(sql);
-	}
-
-	// haven't tested
-	@Override
-	public Task getNext(int id) {
-		String sql = "select*from " + this.tableName + " where id>" + id + " and status <>true or id>" + id
-				+ " and status is null limit 1;";
-		Task task = jdbcTemplate.queryForObject(sql, new TaskMapper());
-		return task;
 	}
 
 	public Task get(int id) {
@@ -56,6 +39,28 @@ public class TaskDaoImpl extends TaskDao {
 	public void init(String tableSchema) {
 		String sql = "CREATE TABLE IF NOT EXISTS " + this.tableName + "(" + tableSchema + ");";
 		jdbcTemplate.execute(sql);
+	}
+
+	// haven't tested
+	// only update status in task
+	@Override
+	public void update(Task task) {
+		String sql = "UPDATE " + this.tableName + " SET status=" + task.isRunning() + " WHERE id=" + task.getId() + ";";
+		jdbcTemplate.execute(sql);
+	}
+
+	// haven't tested
+	@Override
+	public Task getNext(int id) {
+		String sql = "select*from " + this.tableName + " where id>" + id + " and status <>true or id>" + id
+				+ " and status is null limit 1;";
+		Task task = jdbcTemplate.queryForObject(sql, new TaskMapper());
+		return task;
+	}
+
+	public boolean containsLink(String link) {
+		String sql = "select exists (select 1 from " + this.tableName + " where link = '" + link + "')";
+		return jdbcTemplate.queryForObject(sql, boolean.class);
 	}
 
 }

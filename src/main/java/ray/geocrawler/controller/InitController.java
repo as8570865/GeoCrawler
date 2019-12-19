@@ -10,9 +10,8 @@ import ray.geocrawler.service.TaskService;
 public class InitController {
 	TaskService taskService;
 
-	public void setTaskService(TaskService taskService) {
-		this.taskService = taskService;
-		System.out.println("setting task service");
+	public InitController(TaskService taskService) {
+		this.taskService=taskService;
 	}
 
 	@RequestMapping(value = "/init", produces = "application/json")

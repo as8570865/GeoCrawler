@@ -19,7 +19,7 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<!-- Inject init controller -->
 	<bean id="initController"
 		class="ray.geocrawler.controller.InitController">
-		<property name="taskService" ref="taskServiceImpl" />
+		<constructor-arg  ref="taskServiceImpl" />
 	</bean>
 
 	<!-- Inject geoData controller <bean id="geoDataController" class="ray.geocrawler.controller.GeoDataController"> 
@@ -31,7 +31,7 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<!-- task controller -->
 	<bean id="taskController"
 		class="ray.geocrawler.controller.TaskController">
-		<property name="taskService" ref="taskServiceImpl" />
+		<constructor-arg  ref="taskServiceImpl" />
 	</bean>
 
 </beans>

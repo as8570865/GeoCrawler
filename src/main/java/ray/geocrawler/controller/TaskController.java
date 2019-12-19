@@ -16,10 +16,10 @@ import ray.geocrawler.service.TaskService;
 public class TaskController {
 	TaskService taskService;
 	
-	public void setTaskService(TaskService taskService) {
+	public TaskController(TaskService taskService) {
 		this.taskService=taskService;
-		System.out.println("setting task service");
 	}
+	
 	
 	
 	

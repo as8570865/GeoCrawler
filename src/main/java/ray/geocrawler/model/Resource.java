@@ -15,8 +15,8 @@ public class Resource extends GeoData {
 		super(jsonObj);
 	}
 
-	public Resource(String geoType, String link) {
-		this.geoType = geoType;
+	public Resource( String link) {
+		
 		this.link = link;
 	}
 
@@ -35,6 +35,12 @@ public class Resource extends GeoData {
 		resourceObj.put("url", this.link);
 
 		return resourceObj.toString();
+	}
+
+	@Override
+	public String getDataType() {
+		// TODO Auto-generated method stub
+		return "resource";
 	}
 
 }
