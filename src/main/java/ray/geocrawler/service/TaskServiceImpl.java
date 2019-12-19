@@ -6,7 +6,7 @@ import java.util.Map;
 import ray.geocrawler.dao.*;
 import ray.geocrawler.model.*;
 
-public class TaskServiceImpl implements TaskService,GeoTypeSettable {
+public class TaskServiceImpl implements TaskService, GeoTypeSettable {
 
 	// store task and resource dao
 	private Map<String, GeoDataDao> daoMap;
@@ -17,7 +17,7 @@ public class TaskServiceImpl implements TaskService,GeoTypeSettable {
 	// for init table
 	private Map<String, String> tableSchemaMap;
 	private List<String> geoTypeList;
-	
+
 	private String geoType;
 
 	public void setDaoMap(Map<String, GeoDataDao> daoMap) {
@@ -35,11 +35,10 @@ public class TaskServiceImpl implements TaskService,GeoTypeSettable {
 	public void setGeoTypeList(List<String> geoTypeList) {
 		this.geoTypeList = geoTypeList;
 	}
-	
 
 	public void setGeoType(String geoType) {
-		this.geoType=geoType;
-		
+		this.geoType = geoType;
+
 	}
 
 	public void init() {
@@ -65,5 +64,28 @@ public class TaskServiceImpl implements TaskService,GeoTypeSettable {
 
 	}
 
+	public Task getNext(String geoType, int id) {
+		System.out.println("calling getNext in taskService");
+		TaskDao tDao = (TaskDao) daoMap.get("task");
+		tDao.setGeoType(geoType);
+		Task returnTask= tDao.getNext(id);
+		if (returnTask == null)
+			return null;
+		//set task running
+		returnTask.setRunning(true);
+		tDao.update(returnTask);
+		return returnTask;
 
+	}
+
+	public void postTask(List<Task> taskList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void postResource(Resource resource) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 }

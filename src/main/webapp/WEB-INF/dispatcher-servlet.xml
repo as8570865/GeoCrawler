@@ -25,15 +25,21 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 		</property>
 	</bean>
 
+	<!-- mysql conf <bean name="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> 
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" /> <property 
+		name="url" value="jdbc:mysql://localhost:3306/geoCrawler?serverTimezone=UTC" 
+		/> <property name="username" value="root" /> <property name="password" value="" 
+		/> </bean> -->
 
-	<bean name="dataSource"
+	<!-- psql conf -->
+	<bean name="dataSource" id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName"
-			value="com.mysql.jdbc.Driver" />
+			value="org.postgresql.Driver" />
 		<property name="url"
-			value="jdbc:mysql://localhost:3306/geoCrawler?serverTimezone=UTC" />
-		<property name="username" value="root" />
-		<property name="password" value="" />
+			value="jdbc:postgresql://localhost:5432/geocrawler" />
+		<property name="username" value="postgres" />
+		<property name="password" value="88888888" />
 	</bean>
 
 	<!-- other beans -->

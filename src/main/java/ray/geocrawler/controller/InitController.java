@@ -1,26 +1,23 @@
 package ray.geocrawler.controller;
 
-import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ray.geocrawler.model.Task;
 import ray.geocrawler.service.TaskService;
 
 @Controller
-@RequestMapping(value = "/task")
-public class TaskController {
+public class InitController {
 	TaskService taskService;
-	
+
 	public void setTaskService(TaskService taskService) {
-		this.taskService=taskService;
+		this.taskService = taskService;
 		System.out.println("setting task service");
 	}
-	
-	
-	
+
+	@RequestMapping(value = "/init", produces = "application/json")
+	public @ResponseBody String init() {
+		taskService.init();
+		return "successfully initialized";
+	}
 }

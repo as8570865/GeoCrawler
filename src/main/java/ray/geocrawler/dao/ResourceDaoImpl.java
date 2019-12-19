@@ -1,22 +1,43 @@
 package ray.geocrawler.dao;
 
-import javax.sql.DataSource;
+import java.util.List;
 
-import org.springframework.jdbc.core.JdbcTemplate;
+import javax.sql.DataSource;
 
 import ray.geocrawler.model.Resource;
 
-public class ResourceDaoImpl extends ResourceDao {
+public class ResourceDaoImpl extends GeoDataDaoAbst<Resource> {
 
-	private final static String dataType = "resource";
-
-	public ResourceDaoImpl(DataSource ds) {
-		this.jdbcTemplate = new JdbcTemplate(ds);
-		this.rowMapper = new ResourceMapper();
-		this.geoDataType = dataType;
+	public ResourceDaoImpl(DataSource ds, String dataType) {
+		super(ds, dataType);
+		// TODO Auto-generated constructor stub
 	}
-	
-	@Override
+
+	public Resource get(int id) {
+		String sql = "select* from " + tableName + " where id=?";
+		Resource resource = jdbcTemplate.queryForObject(sql, new Object[] { id }, new ResourceMapper());
+		resource.setGeoType(geoType);
+		return resource;
+	}
+
+	public List<Resource> getAll() {
+		String sql = "select* from " + tableName;
+		return jdbcTemplate.query(sql, new ResourceMapper());
+	}
+
+	public void delete(int id) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void init(String tableSchema) {
+		// System.out.println("checking " + geoType + " resource table...");
+		// String checkTableExists = "show tables like '" + this.tableName + "'";
+		String sql = "CREATE TABLE IF NOT EXISTS " + this.tableName + "(" + tableSchema + ");";
+		jdbcTemplate.execute(sql);
+
+	}
+
 	public void insert(Resource rs) {
 		String sql = "insert into " + tableName + "(link)value('" + rs.getLink() + "')";
 		jdbcTemplate.execute(sql);

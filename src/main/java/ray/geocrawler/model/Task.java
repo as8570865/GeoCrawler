@@ -16,12 +16,8 @@ public class Task extends GeoData {
 		this.level = jsonObj.getInt("level");
 	}
 
-	public Task(int id, String geoType, String link, boolean running, int level) {
+	public Task(int id) {
 		this.id = id;
-		this.geoType = geoType;
-		this.link = link;
-		this.running = running;
-		this.level = level;
 	}
 
 	public Task(String link,int level) {
