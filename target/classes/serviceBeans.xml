@@ -22,6 +22,11 @@
 		<entry key="sos" value-ref="sosList" />
 		<entry key="wms" value-ref="wmsList" />
 		<entry key="wts" value-ref="wtsList" />
+		<entry key="test1" value-ref="test1" />
+		<entry key="test2" value-ref="test2" />
+		<entry key="test3" value-ref="test3" />
+		<entry key="test4" value-ref="test4" />
+		<entry key="test5" value-ref="test5" />
 	</util:map>
 	
 	<!-- dao map -->

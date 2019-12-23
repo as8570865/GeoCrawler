@@ -25,5 +25,35 @@
 		<value>wts server</value>
 		<value>wts web</value>
 	</util:list>
+	
+	<util:list id="test1" value-type="java.lang.String">
+		<value>test1 service</value>
+		<value>test1 server</value>
+		<value>test1 web</value>
+	</util:list>
+	
+	<util:list id="test2" value-type="java.lang.String">
+		<value>test2 service</value>
+		<value>test2 server</value>
+		<value>test2 web</value>
+	</util:list>
+	
+	<util:list id="test3" value-type="java.lang.String">
+		<value>test3 service</value>
+		<value>test3 server</value>
+		<value>test3 web</value>
+	</util:list>
+	
+	<util:list id="test4" value-type="java.lang.String">
+		<value>test4 service</value>
+		<value>test4 server</value>
+		<value>test4 web</value>
+	</util:list>
+	
+	<util:list id="test5" value-type="java.lang.String">
+		<value>test5 service</value>
+		<value>test5 server</value>
+		<value>test5 web</value>
+	</util:list>
 
 </beans>

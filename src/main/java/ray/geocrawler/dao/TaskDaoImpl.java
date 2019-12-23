@@ -10,7 +10,6 @@ public class TaskDaoImpl extends TaskDao {
 
 	public TaskDaoImpl(DataSource ds, String geoDataType) {
 		super(ds, geoDataType);
-		System.out.println("geodataType= " + geoDataType);
 	}
 
 	public void insert(Task task) {

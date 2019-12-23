@@ -44,10 +44,4 @@ public class ResourceDaoImpl extends ResourceDao {
 		// System.out.println("inserting resource: " + rs.toString());
 	}
 
-
-	public boolean containsLink(String link) {
-		String sql = "select exists (select 1 from " + this.tableName + " where link = '" + link + "')";
-		return jdbcTemplate.queryForObject(sql, boolean.class);
-	}
-
 }

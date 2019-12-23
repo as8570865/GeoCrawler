@@ -12,6 +12,7 @@ public class ResourceMapper implements RowMapper<Resource>{
 		Resource resource=new Resource();
 		resource.setId(rs.getInt("id"));
 		resource.setLink(rs.getString("link"));
+		resource.setLevel(rs.getInt("level"));
 		return resource;
 	}
 

@@ -3,7 +3,6 @@ package ray.geocrawler.dao;
 import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 
 import ray.geocrawler.model.GeoData;
 
@@ -26,5 +25,10 @@ public abstract class GeoDataDaoAbst<T extends GeoData> implements GeoDataDao<T>
 		this.geoType = geoType;
 		tableName = geoDataType + "_" + geoType;
 		// System.out.println("setting geoType in resourceDaoImpl ");
+	}
+	
+	public boolean containsLink(String link) {
+		String sql = "select exists (select 1 from " + this.tableName + " where link = '" + link + "')";
+		return jdbcTemplate.queryForObject(sql, boolean.class);
 	}
 }

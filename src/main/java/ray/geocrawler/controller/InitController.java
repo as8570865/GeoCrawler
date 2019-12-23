@@ -11,7 +11,7 @@ public class InitController {
 	TaskService taskService;
 
 	public InitController(TaskService taskService) {
-		this.taskService=taskService;
+		this.taskService = taskService;
 	}
 
 	@RequestMapping(value = "/init", produces = "application/json")

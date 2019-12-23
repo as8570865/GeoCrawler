@@ -1,8 +1,6 @@
 package ray.geocrawler.model;
 
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONString;
 
 public class Resource extends GeoData {
 
@@ -23,18 +21,19 @@ public class Resource extends GeoData {
 	@Override
 	public String toString() {
 		if (id == 0)
-			return "Resource [ geoType=" + geoType + ", link=" + link + "]";
-		return "Resource [id=" + id + ", geoType=" + geoType + ", link=" + link + "]";
+			return "Resource [ dataType= "+this.getDataType()+", geoType=" + geoType + ", link=" + link + "]";
+		return "Resource [dataType= "+this.getDataType()+", id=" + id + ", geoType=" + geoType + ", link=" + link + "]";
 	}
 
 	@Override
 	public String toJsonString() {
-		JSONObject resourceObj = new JSONObject();
-		resourceObj.put("id", this.id);
-		resourceObj.put("geoType", this.geoType);
-		resourceObj.put("url", this.link);
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("id", this.id);
+		jsonObj.put("geoType", this.geoType);
+		jsonObj.put("link", this.link);
+		jsonObj.put("level", this.level);
 
-		return resourceObj.toString();
+		return jsonObj.toString();
 	}
 
 	@Override

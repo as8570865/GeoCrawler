@@ -18,8 +18,9 @@ public class TaskServiceImpl implements TaskService {
 	private Map<String, String> tableSchemaMap;
 
 	private String geoType;
-	
-	public TaskServiceImpl(Map<String, GeoDataDao> daoMap,Map<String, List<String>> seedMap,Map<String, String> tableSchemaMap) {
+
+	public TaskServiceImpl(Map<String, GeoDataDao> daoMap, Map<String, List<String>> seedMap,
+			Map<String, String> tableSchemaMap) {
 		this.daoMap = daoMap;
 		this.seedMap = seedMap;
 		this.tableSchemaMap = tableSchemaMap;
@@ -31,18 +32,17 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	public void init() {
-		
+
 		ResourceDaoImpl rDao = (ResourceDaoImpl) this.daoMap.get("resource");
 		TaskDaoImpl tDao = (TaskDaoImpl) this.daoMap.get("task");
 
-		
 		for (String geoType : seedMap.keySet()) {
 			// init table
 			rDao.setGeoType(geoType);
 			tDao.setGeoType(geoType);
 			rDao.init(tableSchemaMap.get("resource"));
 			tDao.init(tableSchemaMap.get("task"));
-			
+
 			// init seed
 			tDao.setGeoType(geoType);
 			List<String> seeds = seedMap.get(geoType);
@@ -51,11 +51,10 @@ public class TaskServiceImpl implements TaskService {
 				tDao.insert(task);
 			}
 		}
-
 	}
 
 	public Task getNext(String geoType, Task task) {
-		System.out.println("calling getNext in taskService");
+		//System.out.println("calling getNext in taskService");
 		TaskDao tDao = (TaskDao) daoMap.get("task");
 		tDao.setGeoType(geoType);
 
@@ -82,15 +81,17 @@ public class TaskServiceImpl implements TaskService {
 		tDao.update(task);
 
 		// insert task list
-		
+
 		for (GeoData data : geoDataList) {
-			GeoDataDao dao=daoMap.get(data.getDataType());
+			GeoDataDao dao = daoMap.get(data.getDataType());
 			dao.setGeoType(geoType);
-			if (!dao.containsLink(data.getLink()))
-				data.setLevel(task.getLevel()+1);
+
+			if (!dao.containsLink(data.getLink())) {
+				data.setLevel(task.getLevel() + 1);
 				dao.insert(data);
+			}
 		}
-		
+
 	}
 
 }

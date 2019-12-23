@@ -24,7 +24,7 @@ public class TestController {
 
 	public void setTaskService(TaskService taskService) {
 		this.taskService = taskService;
-		System.out.println("setting task service in test controller");
+		//System.out.println("setting task service in test controller");
 	}
 
 	@RequestMapping(value = "/{geoType}", method = RequestMethod.GET)

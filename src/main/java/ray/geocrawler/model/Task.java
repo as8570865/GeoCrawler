@@ -12,30 +12,38 @@ public class Task extends GeoData {
 
 	public Task(JSONObject jsonObj) {
 		super(jsonObj);
-		this.level = jsonObj.getInt("level");
 	}
 
 	public Task(int id) {
 		this.id = id;
 	}
 
-	public Task(String link,int level) {
-		this.link=link;
-		this.level=level;
-		
+	public Task(String link, int level) {
+		this.link = link;
+		this.level = level;
+
 	}
 
 	@Override
 	public String toString() {
 		if (id == 0)
-			return "Task [running=" + running + ", level=" + level + ", geoType=" + geoType + ", link=" + link + "]";
-		return "Task [running=" + running + ", level=" + level + ", id=" + id + ", geoType=" + geoType + ", link="
-				+ link + "]";
+			return "Task [dataType= " + this.getDataType() + ", running=" + running + ", level=" + level + ", geoType="
+					+ geoType + ", link=" + link + "]";
+		return "Task [id= " + id + ", dataType= " + this.getDataType() + ", running=" + running + ", level=" + level
+				+ ", geoType=" + geoType + ", link=" + link + "]";
 	}
 
 	@Override
 	public String toJsonString() {
-		return null;
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("id", this.id);
+		jsonObj.put("geoType", this.geoType);
+		jsonObj.put("link", this.link);
+		jsonObj.put("level", this.level);
+		jsonObj.put("status", this.running);
+
+		return jsonObj.toString();
+
 	}
 
 	public boolean isRunning() {

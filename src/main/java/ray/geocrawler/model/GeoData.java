@@ -1,16 +1,15 @@
 package ray.geocrawler.model;
 
 import org.json.JSONObject;
-import org.json.JSONString;
 
 public abstract class GeoData {
 	protected int id;
 	protected int level;
 	protected String geoType;
 	protected String link;
-	
+
 	protected static String DATA_TYPE;
-	
+
 	public int getLevel() {
 		return level;
 	}
@@ -20,11 +19,17 @@ public abstract class GeoData {
 	}
 
 	public GeoData() {
-		
+
 	}
 
 	public GeoData(JSONObject jsonObj) {
-		this.link=jsonObj.getString("link");
+		if (jsonObj.has("id"))
+			this.id = jsonObj.getInt("id");
+		if (jsonObj.has("link"))
+			this.link = jsonObj.getString("link");
+		if (jsonObj.has("level"))
+			this.level = jsonObj.getInt("level");
+
 	}
 
 	public int getId() {
@@ -51,12 +56,11 @@ public abstract class GeoData {
 		this.link = link;
 	}
 
+	public abstract String toJsonString();
+	
 	@Override
-	public abstract String toString() ;
-	
-	public abstract String toJsonString() ;
-	
+	public abstract String toString();
+
 	public abstract String getDataType();
-	
-	
+
 }
