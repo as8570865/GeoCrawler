@@ -3,8 +3,12 @@ package idv.ray.geocrawler.service;
 import java.util.List;
 import java.util.Map;
 
-import idv.ray.geocrawler.dao.*;
-import idv.ray.geocrawler.model.*;
+import idv.ray.geocrawler.dao.GeoDataDao;
+import idv.ray.geocrawler.dao.ResourceDaoImpl;
+import idv.ray.geocrawler.dao.TaskDao;
+import idv.ray.geocrawler.dao.TaskDaoImpl;
+import idv.ray.geodata.GeoData;
+import idv.ray.geodata.Task;
 
 public class TaskServiceImpl implements TaskService {
 
@@ -53,21 +57,26 @@ public class TaskServiceImpl implements TaskService {
 		}
 	}
 
-	public Task getNext(String geoType, Task task) {
-		//System.out.println("calling getNext in taskService");
+	public Task getNext(String geoType) {
+		// System.out.println("calling getNext in taskService");
 		TaskDao tDao = (TaskDao) daoMap.get("task");
 		tDao.setGeoType(geoType);
 
 		// task.getId()=0 when first calling
-		Task returnTask = tDao.getNext(task.getId());
+		Task returnTask = tDao.getNextNullStatus();
+		//System.out.println("null status task in service: "+returnTask.toString());
+		if (returnTask.isValid()) {
+			// set task running
+			returnTask.setRunning(true);
+			tDao.update(returnTask);
+			System.out.println("task valid in service");
+		} else {
+			System.out.println("no null status task!!");
+			System.out.println("querying running task...");
+			returnTask = tDao.getNextRunningStatus();
+			//System.out.println("running task in service: "+returnTask.toString());
+		}
 
-		// last one situation
-		if (returnTask == null)
-			return null;
-
-		// set task running
-		returnTask.setRunning(true);
-		tDao.update(returnTask);
 		return returnTask;
 
 	}
@@ -89,6 +98,9 @@ public class TaskServiceImpl implements TaskService {
 			if (!dao.containsLink(data.getLink())) {
 				data.setLevel(task.getLevel() + 1);
 				dao.insert(data);
+				System.out.println("inserting: " + data.toString());
+			} else {
+				System.out.println(data.toString() + " already exists");
 			}
 		}
 

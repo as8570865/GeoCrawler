@@ -12,13 +12,13 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<!-- Inject test controller -->
 	<bean id="testController"
-		class="ray.geocrawler.controller.TestController">
+		class="idv.ray.geocrawler.controller.TestController">
 		<property name="taskService" ref="taskServiceImpl" />
 	</bean>
 
 	<!-- Inject init controller -->
 	<bean id="initController"
-		class="ray.geocrawler.controller.InitController">
+		class="idv.ray.geocrawler.controller.InitController">
 		<constructor-arg ref="taskServiceImpl" />
 	</bean>
 
@@ -30,7 +30,7 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<!-- task controller -->
 	<bean id="taskController"
-		class="ray.geocrawler.controller.TaskController">
+		class="idv.ray.geocrawler.controller.TaskController">
 		<constructor-arg index="0" ref="taskServiceImpl" />
 		<constructor-arg index="1" ref="dataTypeMap" />
 	</bean>
@@ -39,9 +39,9 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<util:map id="dataTypeMap" map-class="java.util.HashMap"
 		key-type="java.lang.String" value-type="java.lang.String">
 		<entry key="resource"
-			value="ray.geocrawler.model.Resource" />
+			value="idv.ray.geodata.Resource" />
 		<entry key="task"
-			value="ray.geocrawler.model.Task" />
+			value="idv.ray.geodata.Task" />
 	</util:map>
 
 </beans>

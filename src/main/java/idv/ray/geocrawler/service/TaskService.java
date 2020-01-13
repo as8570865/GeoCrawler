@@ -2,8 +2,8 @@ package idv.ray.geocrawler.service;
 
 import java.util.List;
 
-import idv.ray.geocrawler.model.GeoData;
-import idv.ray.geocrawler.model.Task;
+import idv.ray.geodata.GeoData;
+import idv.ray.geodata.Task;
 
 public interface TaskService {
 	
@@ -11,7 +11,7 @@ public interface TaskService {
 
 	public void init() ;
 	
-	public Task getNext(String geoType,Task task);
+	public Task getNext(String geoType);
 	
 	public void post(String geoType,Task task,List<GeoData> geoDataList);
 	

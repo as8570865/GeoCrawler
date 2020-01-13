@@ -10,7 +10,7 @@
 
 	<!-- Inject task service -->
 	<bean id="taskServiceImpl"
-		class="ray.geocrawler.service.TaskServiceImpl">
+		class="idv.ray.geocrawler.service.TaskServiceImpl">
 		<constructor-arg index="0" ref="daoMap" />
 		<constructor-arg index="1" ref="seedMap" />
 		<constructor-arg index="2" ref="tableSchemaMap" />
@@ -31,7 +31,7 @@
 	
 	<!-- dao map -->
 	<util:map id="daoMap" map-class="java.util.HashMap"
-		key-type="java.lang.String" value-type="ray.geocrawler.dao.GeoDataDao">
+		key-type="java.lang.String" value-type="idv.ray.geocrawler.dao.GeoDataDao">
 		<entry key="task" value-ref="taskDaoImpl" />
 		<entry key="resource" value-ref="resourceDaoImpl" />
 	</util:map>

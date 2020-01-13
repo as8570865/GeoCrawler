@@ -4,7 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import idv.ray.geocrawler.model.GeoData;
+import idv.ray.geodata.GeoData;
 
 public abstract class GeoDataDaoAbst<T extends GeoData> implements GeoDataDao<T> {
 

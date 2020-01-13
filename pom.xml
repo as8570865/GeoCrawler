@@ -80,7 +80,12 @@
 			<version>42.2.9</version>
 		</dependency>
 
-
+		<!-- GeoData -->
+		<dependency>
+			<groupId>idv.ray</groupId>
+			<artifactId>GeoData</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
 
 	</dependencies>
 	<build>

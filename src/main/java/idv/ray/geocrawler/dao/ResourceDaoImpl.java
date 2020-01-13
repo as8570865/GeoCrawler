@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import idv.ray.geocrawler.model.Resource;
+import idv.ray.geodata.Resource;
 
 public class ResourceDaoImpl extends ResourceDao {
 
@@ -16,7 +16,6 @@ public class ResourceDaoImpl extends ResourceDao {
 	public Resource get(int id) {
 		String sql = "select* from " + tableName + " where id=?";
 		Resource resource = jdbcTemplate.queryForObject(sql, new Object[] { id }, new ResourceMapper());
-		resource.setGeoType(geoType);
 		return resource;
 	}
 

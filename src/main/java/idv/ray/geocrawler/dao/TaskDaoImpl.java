@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import idv.ray.geocrawler.model.Task;
+import idv.ray.geodata.Task;
 
 public class TaskDaoImpl extends TaskDao {
 
@@ -21,7 +21,7 @@ public class TaskDaoImpl extends TaskDao {
 	public Task get(int id) {
 		String sql = "select* from " + tableName + " where id=?";
 		Task task = jdbcTemplate.queryForObject(sql, new Object[] { id }, new TaskMapper());
-		task.setGeoType(geoType);
+		
 		return task;
 	}
 
@@ -50,16 +50,29 @@ public class TaskDaoImpl extends TaskDao {
 
 	// haven't tested
 	@Override
-	public Task getNext(int id) {
-		String sql = "select*from " + this.tableName + " where id>" + id + " and status <>true or id>" + id
-				+ " and status is null limit 1;";
-		Task task = jdbcTemplate.queryForObject(sql, new TaskMapper());
-		return task;
+	public Task getNextNullStatus() {
+		String sql = "select*from " + this.tableName + " where status is null limit 1;";
+		List<Task>taskList=jdbcTemplate.query(sql, new TaskMapper());
+		if(taskList.isEmpty())
+			return new Task();
+		
+		return taskList.get(0);
+	}
+	
+	@Override
+	public Task getNextRunningStatus() {
+		String sql = "select*from " + this.tableName + " where status is true limit 1;";
+		List<Task>taskList=jdbcTemplate.query(sql, new TaskMapper());
+		if(taskList.isEmpty())
+			return new Task();		
+		return taskList.get(0);
 	}
 
 	public boolean containsLink(String link) {
 		String sql = "select exists (select 1 from " + this.tableName + " where link = '" + link + "')";
 		return jdbcTemplate.queryForObject(sql, boolean.class);
 	}
+
+	
 
 }
