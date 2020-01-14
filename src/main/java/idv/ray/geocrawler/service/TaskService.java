@@ -1,8 +1,7 @@
 package idv.ray.geocrawler.service;
 
-import java.util.List;
+import org.json.JSONObject;
 
-import idv.ray.geodata.GeoData;
 import idv.ray.geodata.Task;
 
 public interface TaskService {
@@ -13,6 +12,6 @@ public interface TaskService {
 
 	public Task getNext(String geoType);
 
-	public void post(String geoType, Task task, List<GeoData> geoDataList);
+	public void post(String geoType, JSONObject reqJson);
 
 }

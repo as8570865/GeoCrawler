@@ -35,13 +35,4 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 		<constructor-arg index="1" ref="dataTypeMap" />
 	</bean>
 
-	<!-- data type map  -->
-	<util:map id="dataTypeMap" map-class="java.util.HashMap"
-		key-type="java.lang.String" value-type="java.lang.String">
-		<entry key="resource"
-			value="idv.ray.geodata.Resource" />
-		<entry key="task"
-			value="idv.ray.geodata.Task" />
-	</util:map>
-
 </beans>

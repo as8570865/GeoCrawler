@@ -3,11 +3,16 @@ package idv.ray.geocrawler.service;
 import java.util.List;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import idv.ray.geocrawler.dao.GeoDataDao;
+import idv.ray.geocrawler.dao.ResourceDao;
 import idv.ray.geocrawler.dao.ResourceDaoImpl;
 import idv.ray.geocrawler.dao.TaskDao;
 import idv.ray.geocrawler.dao.TaskDaoImpl;
 import idv.ray.geodata.GeoData;
+import idv.ray.geodata.Resource;
 import idv.ray.geodata.Task;
 
 public class TaskServiceImpl implements TaskService {
@@ -55,51 +60,64 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	public Task getNext(String geoType) {
-		// System.out.println("calling getNext in taskService");
+		
 		TaskDao tDao = (TaskDao) daoMap.get("task");
 		tDao.setGeoType(geoType);
 
-		// task.getId()=0 when first calling
 		Task returnTask = tDao.getNextNullStatus();
-		// System.out.println("null status task in service: "+returnTask.toString());
 		if (returnTask.isValid()) {
 			// set task running
 			returnTask.setRunning(true);
 			tDao.update(returnTask);
 			System.out.println("return a null task");
 		} else {
+			//call get next running task if there is no null status task
 			System.out.println("return a running task");
 			returnTask = tDao.getNextRunningStatus();
-			// System.out.println("running task in service: "+returnTask.toString());
 		}
 
 		return returnTask;
 
 	}
 
-	public void post(String geoType, Task task, List<GeoData> geoDataList) {
+	public void post(String geoType, JSONObject reqJson) {
+		// set dao
 		TaskDao tDao = (TaskDao) daoMap.get("task");
+		ResourceDao rDao = (ResourceDao) daoMap.get("resource");
 		tDao.setGeoType(geoType);
+		rDao.setGeoType(geoType);
+
+		Task task = tDao.get(reqJson.getInt("taskId"));
 
 		// set previous task finished
 		task.setRunning(false);
 		tDao.update(task);
 
-		// insert task list
-
-		for (GeoData data : geoDataList) {
-			GeoDataDao dao = daoMap.get(data.getDataType());
-			dao.setGeoType(geoType);
-
-			if (!dao.containsLink(data.getLink())) {
-				data.setLevel(task.getLevel() + 1);
-				dao.insert(data);
-				System.out.println("inserting: " + data.toString());
-			} else {
-				System.out.println(data.toString() + " already exists");
+		// insert data
+		if (reqJson.getString("type").equals("task")) {
+			JSONArray taskJsonArr = reqJson.getJSONObject("result").getJSONArray("value");
+			for (int i = 0; i < taskJsonArr.length(); i++) {
+				Task t = new Task(taskJsonArr.getJSONObject(i));
+				if (!tDao.containsLink(t.getLink())) {
+					t.setLevel(t.getLevel() + 1);
+					tDao.insert(t);
+					System.out.println("inserting task: " + t.toString());
+				} else {
+					System.out.println("task: " + t.toString() + " already exists");
+				}
 			}
+			
+		} else if (reqJson.getString("type").equals("resource")) {
+			Resource r = new Resource(task.getLink());
+			if (!rDao.containsLink(r.getLink())) {
+				r.setLevel(task.getLevel() + 1);
+				rDao.insert(r);
+				System.out.println("inserting resource: " + r.toString());
+			} else {
+				System.out.println("resource: " + r.toString() + " already exists");
+			}
+		} else {
+			System.out.println("wrong geoType content!!");
 		}
-
 	}
-
 }
