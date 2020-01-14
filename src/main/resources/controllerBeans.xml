@@ -32,7 +32,6 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<bean id="taskController"
 		class="idv.ray.geocrawler.controller.TaskController">
 		<constructor-arg index="0" ref="taskServiceImpl" />
-		<constructor-arg index="1" ref="dataTypeMap" />
 	</bean>
 
 </beans>

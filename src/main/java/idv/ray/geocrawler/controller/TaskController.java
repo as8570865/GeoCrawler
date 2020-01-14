@@ -37,11 +37,13 @@ public class TaskController {
 		
 		//if empty request when first calling, directly get next task
 		if(reqJson.has("taskId")) {
+			System.out.println("posting geourl...");
 			taskService.post(geoType, reqJson);
 		}
 
 		Task t = taskService.getNext(geoType);
-		//System.out.println("task in con: "+t.toJsonString());
+		System.out.println("get next task");
+		
 		if (!t.isValid()) {
 			System.out.println("no prepared task!!");
 			System.out.println("finished!!");

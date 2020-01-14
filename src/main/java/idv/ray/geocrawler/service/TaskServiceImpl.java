@@ -97,9 +97,8 @@ public class TaskServiceImpl implements TaskService {
 		if (reqJson.getString("type").equals("task")) {
 			JSONArray taskJsonArr = reqJson.getJSONObject("result").getJSONArray("value");
 			for (int i = 0; i < taskJsonArr.length(); i++) {
-				Task t = new Task(taskJsonArr.getJSONObject(i));
+				Task t = new Task(taskJsonArr.getString(i),task.getLevel()+1);
 				if (!tDao.containsLink(t.getLink())) {
-					t.setLevel(t.getLevel() + 1);
 					tDao.insert(t);
 					System.out.println("inserting task: " + t.toString());
 				} else {
