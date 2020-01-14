@@ -38,6 +38,9 @@ public class TaskController {
 			throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException,
 			SecurityException, IllegalArgumentException, InvocationTargetException, JSONException {
 
+		if(!taskService.isValidGeotype(geoType))
+			return "wrong geotype!!";
+		
 		List<GeoData> resultList = new ArrayList<GeoData>();
 
 		JSONObject reqJson = new JSONObject(req);
@@ -60,6 +63,18 @@ public class TaskController {
 				}
 				taskService.post(geoType, task, resultList);
 			}
+		}
+		
+		if(reqJson.has("taskId")) {
+			String type=reqJson.getString("type");
+			if(type.equals("resource")) {
+				
+			}else if(type.equals("task")) {
+				
+			}else {
+				System.out.println("wrong type content!!");
+			}
+			
 		}
 
 		Task t = taskService.getNext(geoType);

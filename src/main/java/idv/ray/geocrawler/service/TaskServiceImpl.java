@@ -21,18 +21,15 @@ public class TaskServiceImpl implements TaskService {
 	// for init table
 	private Map<String, String> tableSchemaMap;
 
-	private String geoType;
+	public boolean isValidGeotype(String geoType) {
+		return seedMap.containsKey(geoType);
+	}
 
 	public TaskServiceImpl(Map<String, GeoDataDao> daoMap, Map<String, List<String>> seedMap,
 			Map<String, String> tableSchemaMap) {
 		this.daoMap = daoMap;
 		this.seedMap = seedMap;
 		this.tableSchemaMap = tableSchemaMap;
-	}
-
-	public void setGeoType(String geoType) {
-		this.geoType = geoType;
-
 	}
 
 	public void init() {
@@ -64,17 +61,16 @@ public class TaskServiceImpl implements TaskService {
 
 		// task.getId()=0 when first calling
 		Task returnTask = tDao.getNextNullStatus();
-		//System.out.println("null status task in service: "+returnTask.toString());
+		// System.out.println("null status task in service: "+returnTask.toString());
 		if (returnTask.isValid()) {
 			// set task running
 			returnTask.setRunning(true);
 			tDao.update(returnTask);
-			System.out.println("task valid in service");
+			System.out.println("return a null task");
 		} else {
-			System.out.println("no null status task!!");
-			System.out.println("querying running task...");
+			System.out.println("return a running task");
 			returnTask = tDao.getNextRunningStatus();
-			//System.out.println("running task in service: "+returnTask.toString());
+			// System.out.println("running task in service: "+returnTask.toString());
 		}
 
 		return returnTask;
