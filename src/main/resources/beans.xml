@@ -1,18 +1,45 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:jee="http://www.springframework.org/schema/jee"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:task="http://www.springframework.org/schema/task"
-	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd
+http://www.springframework.org/schema/util
+http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<context:component-scan
 		base-package="com.programcreek.examples" />
 
-	<bean id="helloWorldService"
-		class="com.programcreek.entrylevel.services.HelloWorldService">
-		<property name="name" value="Program Creek Readers" />
+	<!-- crawler bean -->
+	<bean id="crawler" class="idv.ray.geoworker.Crawler">
+		<constructor-arg index="0" ref="notOkUrlFormatSet" />
+		<!-- set max crawled page here -->
+		<constructor-arg index="1" value="2" />
+		<constructor-arg index="2" ref="geoStandardSet" />
+	</bean>
+
+	<!-- notOkUrlFormatSet bean -->
+	<util:set id="notOkUrlFormatSet" set-class="java.util.HashSet"
+		value-type="java.lang.String">
+		<value>application/pdf</value>
+	</util:set>
+	
+	<!-- the geoTypes to run -->
+	<util:set id="geoTypeSet" set-class="java.util.HashSet"
+		value-type="java.lang.String">
+		<value>test5</value>
+	</util:set>
+
+	<!-- geoStandardSet bean -->
+	<util:set id="geoStandardSet" set-class="java.util.HashSet"
+		value-type="idv.ray.geourl.GeoStandard">
+		<ref bean="testGeoStandard" />
+	</util:set>
+
+	<bean id="testGeoStandard" class="idv.ray.geourl.TestGeoStandard">
+
 	</bean>
 </beans>
