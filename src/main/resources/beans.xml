@@ -30,7 +30,7 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<!-- the geoTypes to run -->
 	<util:set id="geoTypeSet" set-class="java.util.HashSet"
 		value-type="java.lang.String">
-		<value>test5</value>
+		<value>test1</value>
 	</util:set>
 
 	<!-- geoStandardSet bean -->
