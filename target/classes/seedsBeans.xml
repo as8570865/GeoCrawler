@@ -9,9 +9,13 @@
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<util:list id="sosList" value-type="java.lang.String">
-		<value>sos service</value>
+		<!-- <value>sos service</value>
 		<value>sos server</value>
-		<value>sos web</value>
+		<value>sos web</value> -->
+		<value>sos uk air</value>
+		<value>ogc sos service</value>
+		<value>ogc sos server</value>
+		<value>ogc sos web</value>
 	</util:list>
 
 	<util:list id="wmsList" value-type="java.lang.String">
@@ -26,28 +30,28 @@
 		<value>wts web</value>
 	</util:list>
 	
-	<util:list id="test1" value-type="java.lang.String">
-		<value>test1 service</value>
-		<value>test1 server</value>
-		<value>test1 web</value>
+	<util:list id="wcsList" value-type="java.lang.String">
+		<value>wcs service</value>
+		<value>wcs server</value>
+		<value>wcs web</value>
 	</util:list>
 	
-	<util:list id="test2" value-type="java.lang.String">
-		<value>test2 service</value>
-		<value>test2 server</value>
-		<value>test2 web</value>
+	<util:list id="wfsList" value-type="java.lang.String">
+		<value>wfs service</value>
+		<value>wfs server</value>
+		<value>wfs web</value>
 	</util:list>
 	
-	<util:list id="test3" value-type="java.lang.String">
-		<value>test3 service</value>
-		<value>test3 server</value>
-		<value>test3 web</value>
+	<util:list id="wmtsList" value-type="java.lang.String">
+		<value>wmts service</value>
+		<value>wmts server</value>
+		<value>wmts web</value>
 	</util:list>
 	
-	<util:list id="test4" value-type="java.lang.String">
-		<value>test4 service</value>
-		<value>test4 server</value>
-		<value>test4 web</value>
+	<util:list id="wpsList" value-type="java.lang.String">
+		<value>wps service</value>
+		<value>wps server</value>
+		<value>wps web</value>
 	</util:list>
 	
 	<util:list id="test5" value-type="java.lang.String">
