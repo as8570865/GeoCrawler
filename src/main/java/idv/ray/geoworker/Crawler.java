@@ -16,7 +16,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import idv.ray.geodata.Task;
-import idv.ray.geourl.GeoStandard;
+import idv.ray.geostandard.GeoStandard;
 
 public class Crawler {
 	private static Pattern patternDomainName;
@@ -28,18 +28,15 @@ public class Crawler {
 	}
 
 	// not-allowed url format set
-	Set<String> notOkUrlFormatSet;
-	int maxPageNum;
+	private Set<String> notOkUrlFormatSet;
+	private int maxPageNum;
 
-	// geo standard list
-	private Set<GeoStandard> geoStandardSet;
-
-	public Crawler(Set<String> notOkUrlFormatSet, int maxPageNum, Set<GeoStandard> geoStandardSet) {
-		this.notOkUrlFormatSet = notOkUrlFormatSet;
+	public Crawler(Set<String> notOkUrlFormatSet,int maxPageNum) {
+		this.notOkUrlFormatSet=notOkUrlFormatSet;
 		this.maxPageNum = maxPageNum;
-		this.geoStandardSet = geoStandardSet;
-	}
+	}		
 
+	//check url file format (eg. not pdf. or others...)
 	private boolean isOkUrl(String urlString) throws MalformedURLException, IOException {
 
 		if (!urlString.isEmpty()) {
@@ -58,12 +55,13 @@ public class Crawler {
 
 	}
 
+	//check url pattern
 	private String getDomainName(String url) {
 
 		String domainName = "";
 		matcher = patternDomainName.matcher(url);
 		if (matcher.find()) {
-			domainName = matcher.group(0).toLowerCase().trim();
+			domainName = matcher.group(0).toLowerCase().trim().split("&")[0].split("%")[0];
 		}
 		return domainName;
 
@@ -72,7 +70,7 @@ public class Crawler {
 	private Set<String> crawlByKeyword(String keyword) {
 
 		Set<String> result = new HashSet<String>();
-		for (int i = 0; i < maxPageNum; i++) {
+		for (int i = 1; i <= maxPageNum; i++) {
 			String request = "https://www.google.com/search?q=" + keyword + "&start=" + i;
 			System.out.println("Sending request..." + request);
 
@@ -88,7 +86,7 @@ public class Crawler {
 					String temp = link.attr("href");
 					if (temp.startsWith("/url?q=")) {
 						// use regex to get domain name
-						String urlString = getDomainName(temp).split("&")[0];
+						String urlString = getDomainName(temp);
 
 						if (isOkUrl(urlString)) {
 							System.out.println("add this url: " + urlString);
@@ -121,7 +119,7 @@ public class Crawler {
 			for (Element link : links) {
 
 				// get attribute href and convert to specific format
-				String urlString = getDomainName(link.attr("href")).split("&")[0];
+				String urlString = getDomainName(link.attr("href"));
 				if (isOkUrl(urlString)) {
 					result.add(urlString);
 					System.out.println("add this url: " + urlString);

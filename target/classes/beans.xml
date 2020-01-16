@@ -16,9 +16,7 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<!-- crawler bean -->
 	<bean id="crawler" class="idv.ray.geoworker.Crawler">
 		<constructor-arg index="0" ref="notOkUrlFormatSet" />
-		<!-- set max crawled page here -->
-		<constructor-arg index="1" value="2" />
-		<constructor-arg index="2" ref="geoStandardSet" />
+		<constructor-arg index="1" value="3" /><!-- set the number of google search page -->
 	</bean>
 
 	<!-- notOkUrlFormatSet bean -->
@@ -26,20 +24,6 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 		value-type="java.lang.String">
 		<value>application/pdf</value>
 	</util:set>
-	
-	<!-- the geoTypes to run -->
-	<util:set id="geoTypeSet" set-class="java.util.HashSet"
-		value-type="java.lang.String">
-		<value>test1</value>
-	</util:set>
 
-	<!-- geoStandardSet bean -->
-	<util:set id="geoStandardSet" set-class="java.util.HashSet"
-		value-type="idv.ray.geourl.GeoStandard">
-		<ref bean="testGeoStandard" />
-	</util:set>
 
-	<bean id="testGeoStandard" class="idv.ray.geourl.TestGeoStandard">
-
-	</bean>
 </beans>

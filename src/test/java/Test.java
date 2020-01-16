@@ -1,19 +1,17 @@
 import java.io.IOException;
 
-import org.json.JSONObject;
-
-import idv.ray.geoworker.Connector;
+import idv.ray.geostandard.GeoStandard;
+import idv.ray.geostandard.SOS;
 
 public class Test {
 
 	public static void main(String[] args) throws IOException {
 
-		JSONObject crawledResultJson=new JSONObject();
-
-		crawledResultJson.put("taskId", "task");
-		crawledResultJson.put("type", "task");
-		crawledResultJson.put("result", "task");
-		System.out.print("worker gets next task: " + Connector.getTask(crawledResultJson, "sos"));
+		GeoStandard sos=new SOS();
+		if(sos.isGeoResource("https://uk-air.defra.gov.uk/sos-ukair/service?service=SOS&request=GetCapabilities")) 
+			System.out.println("successed");
+		else 
+			System.out.println("fail");
 	}
 
 }
