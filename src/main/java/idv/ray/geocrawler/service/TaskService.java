@@ -11,6 +11,8 @@ public interface TaskService {
 	public boolean isValidGeotype(String geoType);
 
 	public Task getNext(String geoType);
+	
+	public String getNextGeoType();
 
 	public void post(String geoType, JSONObject reqJson);
 

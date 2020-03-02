@@ -1,7 +1,6 @@
 package idv.ray.geocrawler.service;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,12 +8,9 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import idv.ray.geocrawler.dao.GeoDataDao;
+import idv.ray.circularlist.CircularList;
 import idv.ray.geocrawler.dao.ResourceDao;
-import idv.ray.geocrawler.dao.ResourceDaoImpl;
 import idv.ray.geocrawler.dao.TaskDao;
-import idv.ray.geocrawler.dao.TaskDaoImpl;
-import idv.ray.geodata.GeoData;
 import idv.ray.geodata.Resource;
 import idv.ray.geodata.Task;
 
@@ -24,6 +20,9 @@ public class TaskServiceImpl implements TaskService {
 	private ResourceDao rDao;
 	
 	private Task prevTask;
+	
+	private CircularList<String> geoTypeList;
+	private int iteratingTimes=0;
 
 	// init seeds
 	private Map<String, List<String>> seedMap;
@@ -53,7 +52,7 @@ public class TaskServiceImpl implements TaskService {
 		rDao.setGeoType(geoType);
 		Resource r = new Resource(prevTask.getLink());
 		if (!rDao.containsLink(r.getLink())) {
-			r.setLevel(prevTask.getLevel() + 1);
+			r.setLevel(prevTask.getLevel());
 			rDao.insert(r);
 			System.out.println("inserting resource: " + r.toString());
 		} else {
@@ -87,10 +86,11 @@ public class TaskServiceImpl implements TaskService {
 			tDao.setGeoType(geoType);
 			List<String> seeds = seedMap.get(geoType);
 			for (String seed : seeds) {
-				Task task = new Task(seed, 0);
+				Task task = new Task(seed, 0);//level=0
 				tDao.insert(task);
 			}
 		}
+		geoTypeList=new CircularList<String>(seedMap.keySet());
 	}
 
 	public Task getNext(String geoType) {
@@ -108,9 +108,17 @@ public class TaskServiceImpl implements TaskService {
 			System.out.println("return a running task");
 			returnTask = tDao.getNextRunningStatus();
 		}
-
+		
+		//for the purpose of distinguishing task with different geotype
+		returnTask.setGeoType(geoType);
 		return returnTask;
 
+	}
+	
+	public String getNextGeoType() {
+		String geoType=geoTypeList.get(Math.abs(iteratingTimes%geoTypeList.size()));
+		iteratingTimes++;
+		return geoType;
 	}
 
 	public void post(String geoType, JSONObject reqJson) {
@@ -129,7 +137,7 @@ public class TaskServiceImpl implements TaskService {
 			//insert tasks
 			JSONObject resultJson=reqJson.getJSONObject("result");
 			JSONArray taskJsonArr = resultJson.getJSONArray("value");
-			Set<String>taskSet=new HashSet();
+			Set<String>taskSet=new HashSet<String>();
 			for(int i=0;i<taskJsonArr.length();i++) {
 				taskSet.add(taskJsonArr.getString(i));			
 			}
@@ -142,4 +150,5 @@ public class TaskServiceImpl implements TaskService {
 			System.out.println("wrong geoType content!!");
 		}
 	}
+
 }

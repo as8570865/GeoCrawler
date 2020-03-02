@@ -1,7 +1,6 @@
 package idv.ray.geocrawler.controller;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,7 +40,8 @@ public class TaskController {
 			taskService.post(geoType, reqJson);
 		}
 
-		Task t = taskService.getNext(geoType);
+		//return a different geotype task
+		Task t = taskService.getNext(taskService.getNextGeoType());
 		System.out.println("get next task");
 		
 		if (!t.isValid()) {
@@ -50,6 +50,13 @@ public class TaskController {
 		}
 		System.out.println("//////////////");
 		return t.toJsonString();
+		
+	}
+	
+	@RequestMapping(value = "/get", method = RequestMethod.GET)
+	public @ResponseBody String get() {
+		return taskService.getNextGeoType();
+		
 		
 	}
 

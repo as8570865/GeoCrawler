@@ -8,20 +8,16 @@
            http://www.springframework.org/schema/util 
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<util:list id="sosList" value-type="java.lang.String">
-		<!-- <value>sos service</value>
-		<value>sos server</value>
-		<value>sos web</value> -->
-		<value>sos uk air</value>
-		<value>ogc sos service</value>
-		<value>ogc sos server</value>
-		<value>ogc sos web</value>
-	</util:list>
-
 	<util:list id="wmsList" value-type="java.lang.String">
 		<value>wms service</value>
 		<value>wms server</value>
 		<value>wms web</value>
+	</util:list>
+	
+	<util:list id="sosList" value-type="java.lang.String">
+		<value>sos gua getcapabilities</value>
+		<value>sos server getcapability</value>
+		<value>ogc sos web</value>
 	</util:list>
 
 	<util:list id="wtsList" value-type="java.lang.String">
