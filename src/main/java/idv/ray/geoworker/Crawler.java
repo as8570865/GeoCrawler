@@ -5,7 +5,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -16,7 +15,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import idv.ray.geodata.Task;
-import idv.ray.geostandard.GeoStandard;
+import idv.ray.geostandard.SOS;
+import idv.ray.geostandard.WMS;
 
 public class Crawler {
 	private static Pattern patternDomainName;
@@ -31,12 +31,14 @@ public class Crawler {
 	private Set<String> notOkUrlFormatSet;
 	private int maxPageNum;
 
-	public Crawler(Set<String> notOkUrlFormatSet,int maxPageNum) {
-		this.notOkUrlFormatSet=notOkUrlFormatSet;
+	public Crawler(Set<String> notOkUrlFormatSet, int maxPageNum) {
+		this.notOkUrlFormatSet = notOkUrlFormatSet;
 		this.maxPageNum = maxPageNum;
-	}		
+		System.out.println("max crawled page is: " + maxPageNum);
+		System.out.println("not ok formats are: " + notOkUrlFormatSet);
+	}
 
-	//check url file format (eg. not pdf. or others...)
+	// check url file format (eg. not pdf. or others...)
 	private boolean isOkUrl(String urlString) throws MalformedURLException, IOException {
 
 		if (!urlString.isEmpty()) {
@@ -55,7 +57,7 @@ public class Crawler {
 
 	}
 
-	//check url pattern
+	// check url pattern
 	private String getDomainName(String url) {
 
 		String domainName = "";
@@ -93,13 +95,13 @@ public class Crawler {
 							System.out.println("/////////");
 							result.add(urlString);
 						}
-
 					}
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		System.out.println("finish crawling this keyword!!");
 		return result;
 	}
 
@@ -111,7 +113,7 @@ public class Crawler {
 
 		try {
 
-			// need http protocol, set this as a Google bot agent :)
+			// need http protocol, set this as a Google bot agent
 			Document doc = Jsoup.connect(request).userAgent(USER_AGENT).timeout(10000).get();
 
 			// get all links
@@ -132,17 +134,44 @@ public class Crawler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		System.out.println("finish crawling this url!!");
 		return result;
 	}
 
+	// if task is not resource, call crawl function
 	public Set<String> crawl(Task task) {
 		if (task.getLevel() == 0) {
-			System.out.println("crawling by keyword!!");
+			System.out.println("crawling by keyword...");
 			return crawlByKeyword(task.getLink());
 		} else {
-			System.out.println("crawling by url!!");
+			System.out.println("crawling by url...");
 			return crawlByUrl(task.getLink());
 		}
 	}
+
+	public Set<String> getNotOkUrlFormatSet() {
+		return notOkUrlFormatSet;
+	}
+
+	public int getMaxPageNum() {
+		return maxPageNum;
+	}
+
+	public static void main(String[] args) throws IOException {
+		Set<String> notOkFormat=new HashSet<String>();
+		notOkFormat.add("application/pdf");
+		
+		Crawler c=new Crawler(notOkFormat,3);
+		
+		Set<String> crawlResult=c.crawlByKeyword("wms ");
+		SOS sos=new SOS();
+		WMS wms=new WMS();
+//		for(String url:crawlResult) {
+//			System.out.println("url: "+url);
+//			if(wms.isGeoResource(url)) {
+//				System.out.println("geo resource: "+url);
+//			}
+//		}
+	}
+
 }

@@ -5,16 +5,18 @@ import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-public class SOS implements GeoStandard {
+public class WMS implements GeoStandard {
 
+	@Override
 	public boolean isGeoResource(String url) {
 		url = url.split("\\?")[0];
-		url += "?" + "request=GetCapabilities&service=SOS";
-
+		url += "?" + "request=GetCapabilities&service=WMS";
 		Document doc;
 		try {
-			doc = Jsoup.connect(url).timeout(10 * 1000).ignoreHttpErrors(true).get();
-			if (doc.toString().contains("</sos:Capabilities>") || doc.toString().contains("</Capabilities>")) {
+			System.out.println("modified url is:" + url);
+			doc = Jsoup.connect(url).timeout(30 * 1000).get();
+			if (doc.toString().contains("</wms:Capabilities>") || doc.toString().contains("</Capabilities>")
+					|| doc.toString().contains("</Capability>")) {
 				System.out.println("this is geoResource!!");
 				return true;
 			}

@@ -13,10 +13,16 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<context:component-scan
 		base-package="com.programcreek.examples" />
 
+	<!-- start geoType -->
+	<bean id="startGeoType" class="java.lang.String">
+		<constructor-arg value="sos" />
+	</bean>
+
 	<!-- crawler bean -->
 	<bean id="crawler" class="idv.ray.geoworker.Crawler">
 		<constructor-arg index="0" ref="notOkUrlFormatSet" />
-		<constructor-arg index="1" value="3" /><!-- set the number of google search page -->
+		<constructor-arg index="1" value="1" /><!-- set the number 
+			of google search page -->
 	</bean>
 
 	<!-- notOkUrlFormatSet bean -->
