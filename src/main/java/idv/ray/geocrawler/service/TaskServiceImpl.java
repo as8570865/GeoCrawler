@@ -71,6 +71,7 @@ public class TaskServiceImpl implements TaskService {
 		this.tDao = tDao;
 		this.seedMap = seedMap;
 		this.tableSchemaMap = tableSchemaMap;
+		geoTypeList=new CircularList<String>(seedMap.keySet());
 	}
 
 	public void init() {
@@ -90,7 +91,7 @@ public class TaskServiceImpl implements TaskService {
 				tDao.insert(task);
 			}
 		}
-		geoTypeList=new CircularList<String>(seedMap.keySet());
+		
 	}
 
 	public Task getNext(String geoType) {

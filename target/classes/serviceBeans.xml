@@ -22,12 +22,8 @@
 		key-type="java.lang.String" value-type="java.lang.String">
 		<entry key="sos" value-ref="sosList" />
 		<entry key="wms" value-ref="wmsList" />
-		<entry key="wts" value-ref="wtsList" />
 		<entry key="wfs" value-ref="wfsList" />
-		<entry key="wcs" value-ref="wcsList" />
 		<entry key="wmts" value-ref="wmtsList" />
-		<entry key="wps" value-ref="wpsList" />
-		<entry key="test5" value-ref="test5" />
 	</util:map>
 
 </beans>

@@ -51,7 +51,7 @@ public class TaskDaoImpl extends TaskDao {
 	// haven't tested
 	@Override
 	public Task getNextNullStatus() {
-		String sql = "select*from " + this.tableName + " where status is null limit 1;";
+		String sql = "select*from " + this.tableName + " where status is null  order by level asc limit 1;";
 		List<Task>taskList=jdbcTemplate.query(sql, new TaskMapper());
 		if(taskList.isEmpty())
 			return new Task();
@@ -61,7 +61,7 @@ public class TaskDaoImpl extends TaskDao {
 	
 	@Override
 	public Task getNextRunningStatus() {
-		String sql = "select*from " + this.tableName + " where status is true limit 1;";
+		String sql = "select*from " + this.tableName + " where status is true  order by level asc limit 1;";
 		List<Task>taskList=jdbcTemplate.query(sql, new TaskMapper());
 		if(taskList.isEmpty())
 			return new Task();		

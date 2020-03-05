@@ -53,11 +53,11 @@ public class TaskController {
 		
 	}
 	
-	@RequestMapping(value = "/get", method = RequestMethod.GET)
-	public @ResponseBody String get() {
-		return taskService.getNextGeoType();
-		
-		
-	}
+//	@RequestMapping(value = "/get", method = RequestMethod.GET)
+//	public @ResponseBody String get() {
+//		return taskService.getNextGeoType();
+//		
+//		
+//	}
 
 }
