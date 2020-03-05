@@ -1,9 +1,7 @@
 package idv.ray.geoworker;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +13,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import idv.ray.geodata.Task;
 import idv.ray.geostandard.GeoStandard;
 import idv.ray.geostandard.SOS;
+import idv.ray.geostandard.WFS;
 import idv.ray.geostandard.WMS;
+import idv.ray.geostandard.WMTS;
 
 public class Worker {
 
@@ -32,29 +32,24 @@ public class Worker {
 	}
 
 	public void run() throws IOException {
-		
+
 		if (geoStandardMap == null) {
 			System.out.println("geoStandardMap is empty, please set geoStandardMap first");
 			return;
 		}
-		
+
 		ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
-		String startGeoType=(String)context.getBean("startGeoType");
-		Task firstTask=new Task(new JSONObject(MasterConnector.getTask(new JSONObject(), startGeoType)));
-		
+		String startGeoType = (String) context.getBean("startGeoType");
+
+		// first get-task from master
+		Task task = new Task(new JSONObject(MasterConnector.getTask(new JSONObject(), startGeoType)));
+
 		int level = 0;
 		while (true) {
 			
-			// get geoStandard
+			String geoType=task.getGeoType();
 			GeoStandard geoStandard = geoStandardMap.get(geoType);
-
 			JSONObject crawledResultJson = new JSONObject();
-
-			Task task = new Task(new JSONObject(MasterConnector.getTask(crawledResultJson, geoType)));
-			if (task.getLevel() > this.maxLevel) {
-				System.out.println("beyond max level, crawler finished");
-				return;
-			}
 
 			// create crawled result json
 			// put the task id
@@ -66,7 +61,7 @@ public class Worker {
 				crawledResultJson.put("type", "resource");
 			} else {
 				System.out.println("this task is \"not\" geo-resource........");
-				
+
 				Crawler crawler = (Crawler) context.getBean("crawler");
 				Set<String> resultSet = crawler.crawl(task);
 				JSONObject resultJson = new JSONObject();
@@ -79,7 +74,13 @@ public class Worker {
 				crawledResultJson.put("result", resultJson);
 
 			}
-		
+
+			task = new Task(new JSONObject(MasterConnector.getTask(crawledResultJson, geoType)));
+			if (task.getLevel() > this.maxLevel) {
+				System.out.println("beyond max level, crawler finished");
+				return;
+			}
+
 		}
 
 	}
@@ -89,8 +90,10 @@ public class Worker {
 		Map<String, GeoStandard> geoStandardMap = new HashMap<String, GeoStandard>();
 		geoStandardMap.put("sos", new SOS());
 		geoStandardMap.put("wms", new WMS());
+		geoStandardMap.put("wmts", new WMTS());
+		geoStandardMap.put("wfs", new WFS());
 
-		Worker worker = new Worker(2);
+		Worker worker = new Worker(4);
 		worker.setGeoStandardSet(geoStandardMap);
 		worker.run();
 

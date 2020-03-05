@@ -5,19 +5,15 @@ import java.io.IOException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import idv.ray.geoworker.Crawler;
-
-public class WMS implements GeoStandard {
-
-	String[] CapabilitiesTagArr = {};
+public class WMPS implements GeoStandard{
 
 	public boolean isGeoResource(String url) {
-		url += "?" + "request=GetCapabilities&service=WMS";
+		url += "?" + "request=GetCapabilities&service=WMTS";
 		Document doc;
 		try {
 
-			doc = Jsoup.connect(url).userAgent(Crawler.USER_AGENT).timeout(30 * 1000).get();
-			if (doc.toString().contains("</WMS_Capabilities") || doc.toString().contains("</WMT_MS_Capabilities")) {
+			doc = Jsoup.connect(url).timeout(30 * 1000).get();
+			if (doc.toString().contains("<Capabilities") ) {
 				System.out.println("this is geoResource!!");
 				return true;
 			}

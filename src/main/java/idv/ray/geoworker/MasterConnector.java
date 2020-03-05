@@ -12,7 +12,7 @@ public class MasterConnector {
 	public static String getTask(JSONObject requestJson,String geoType) throws IOException {
 		
 		String returnString=Jsoup.connect(MASTER_URL+geoType)
-				.timeout(60 * 1000)
+				.timeout(100 * 1000)
 				.requestBody(requestJson.toString())
 				.header("Content-Type", "application/json")
 				.post()

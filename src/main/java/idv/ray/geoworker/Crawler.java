@@ -1,6 +1,8 @@
 package idv.ray.geoworker;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -13,16 +15,20 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import idv.ray.geodata.Task;
-import idv.ray.geostandard.SOS;
 import idv.ray.geostandard.WMS;
 
 public class Crawler {
 	private static Pattern patternDomainName;
 	private Matcher matcher;
-	private static final String USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
+	public static final String USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
 	private static final String DOMAIN_NAME_PATTERN = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)";
+
+	private Set<String> notGeoKeywordSet;
+
 	static {
 		patternDomainName = Pattern.compile(DOMAIN_NAME_PATTERN);
 	}
@@ -31,25 +37,34 @@ public class Crawler {
 	private Set<String> notOkUrlFormatSet;
 	private int maxPageNum;
 
-	public Crawler(Set<String> notOkUrlFormatSet, int maxPageNum) {
+	public Crawler(Set<String> notOkUrlFormatSet, Set notGeoKeywordSet, int maxPageNum) {
 		this.notOkUrlFormatSet = notOkUrlFormatSet;
 		this.maxPageNum = maxPageNum;
+		this.notGeoKeywordSet = notGeoKeywordSet;
 		System.out.println("max crawled page is: " + maxPageNum);
 		System.out.println("not ok formats are: " + notOkUrlFormatSet);
 	}
 
 	// check url file format (eg. not pdf. or others...)
-	private boolean isOkUrl(String urlString) throws MalformedURLException, IOException {
+	private boolean isCorrectFormat(String urlString) throws MalformedURLException, IOException {
 
 		if (!urlString.isEmpty()) {
-			HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlString).openConnection();
-			urlConnection.setConnectTimeout(10000); // 5 sec
-			urlConnection.setReadTimeout(10000); // 10 sec
-			String contentType = urlConnection.getContentType();
-			System.out.println("content type: " + contentType);
-			if (contentType != null) {
-				if (!notOkUrlFormatSet.contains(contentType)) {
-					return true;
+			if (!urlString.contains("pdf")) {
+				for (String notGeoKeywordString : notGeoKeywordSet) {
+					if (urlString.contains(notGeoKeywordString)) {
+						return false;
+					}
+				}
+
+				HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlString).openConnection();
+				urlConnection.setConnectTimeout(10000); // 5 sec
+				urlConnection.setReadTimeout(10000); // 10 sec
+				String contentType = urlConnection.getContentType();
+				System.out.println("content type: " + contentType);
+				if (contentType != null) {
+					if (!notOkUrlFormatSet.contains(contentType)) {
+						return true;
+					}
 				}
 			}
 		}
@@ -63,7 +78,7 @@ public class Crawler {
 		String domainName = "";
 		matcher = patternDomainName.matcher(url);
 		if (matcher.find()) {
-			domainName = matcher.group(0).toLowerCase().trim().split("&")[0].split("%")[0];
+			domainName = matcher.group(0).toLowerCase().trim().split("&")[0].split("%")[0].split("\\?")[0];
 		}
 		return domainName;
 
@@ -89,11 +104,12 @@ public class Crawler {
 					if (temp.startsWith("/url?q=")) {
 						// use regex to get domain name
 						String urlString = getDomainName(temp);
-
-						if (isOkUrl(urlString)) {
-							System.out.println("add this url: " + urlString);
-							System.out.println("/////////");
-							result.add(urlString);
+						if (!result.contains(urlString)) {
+							if (isCorrectFormat(urlString)) {
+								System.out.println("crawl this url: " + urlString);
+								System.out.println("/////////");
+								result.add(urlString);
+							}
 						}
 					}
 				}
@@ -116,20 +132,26 @@ public class Crawler {
 			// need http protocol, set this as a Google bot agent
 			Document doc = Jsoup.connect(request).userAgent(USER_AGENT).timeout(10000).get();
 
+//			System.out.println("/////////");
+//			System.out.println(doc.toString());
+//			System.out.println("/////////");
+
 			// get all links
 			Elements links = doc.select("a[href]");
 			for (Element link : links) {
 
 				// get attribute href and convert to specific format
 				String urlString = getDomainName(link.attr("href"));
-				if (isOkUrl(urlString)) {
-					result.add(urlString);
-					System.out.println("add this url: " + urlString);
-					System.out.println("/////////");
-					// String contentType1 = new URL(urlString).openConnection().getContentType();
-					// System.out.println("content type: " + contentType1);
-
+				if (!result.contains(urlString)) {
+					if (isCorrectFormat(urlString)) {
+						result.add(urlString);
+						System.out.println("crawl this url: " + urlString);
+						System.out.println("/////////");
+						// String contentType1 = new URL(urlString).openConnection().getContentType();
+						// System.out.println("content type: " + contentType1);
+					}
 				}
+
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -158,20 +180,22 @@ public class Crawler {
 	}
 
 	public static void main(String[] args) throws IOException {
-		Set<String> notOkFormat=new HashSet<String>();
+		Set<String> notOkFormat = new HashSet<String>();
 		notOkFormat.add("application/pdf");
-		
-		Crawler c=new Crawler(notOkFormat,3);
-		
-		Set<String> crawlResult=c.crawlByKeyword("wms ");
-		SOS sos=new SOS();
-		WMS wms=new WMS();
-//		for(String url:crawlResult) {
-//			System.out.println("url: "+url);
-//			if(wms.isGeoResource(url)) {
-//				System.out.println("geo resource: "+url);
-//			}
-//		}
+
+		ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+		Crawler c = (Crawler) context.getBean("crawler");
+
+		Set<String> crawlResult = c.crawlByUrl("https://www.bgs.ac.uk/data/services/geolwms.html");
+		// SOS sos = new SOS();
+		WMS wms = new WMS();
+		for (String url : crawlResult) {
+			System.out.println("url: " + url);
+			if (wms.isGeoResource(url)) {
+				System.out.println("geo resource: " + url);
+			}
+		}
+
 	}
 
 }
