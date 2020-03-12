@@ -1,8 +1,6 @@
 package idv.ray.geoworker;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,6 +12,8 @@ import java.util.regex.Pattern;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.parser.ParseSettings;
+import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -78,7 +78,7 @@ public class Crawler {
 		String domainName = "";
 		matcher = patternDomainName.matcher(url);
 		if (matcher.find()) {
-			domainName = matcher.group(0).toLowerCase().trim().split("&")[0].split("%")[0].split("\\?")[0];
+			domainName = matcher.group(0).trim().split("&")[0].split("%")[0].split("\\?")[0];
 		}
 		return domainName;
 
@@ -106,7 +106,7 @@ public class Crawler {
 						String urlString = getDomainName(temp);
 						if (!result.contains(urlString)) {
 							if (isCorrectFormat(urlString)) {
-								System.out.println("crawl this url: " + urlString);
+								System.out.println("get this url: " + urlString);
 								System.out.println("/////////");
 								result.add(urlString);
 							}
@@ -128,27 +128,25 @@ public class Crawler {
 		System.out.println("Sending request..." + request);
 
 		try {
-
+			
+			Parser parser = Parser.htmlParser();
+			parser.settings(new ParseSettings(true, true));
+			
 			// need http protocol, set this as a Google bot agent
-			Document doc = Jsoup.connect(request).userAgent(USER_AGENT).timeout(10000).get();
-
-//			System.out.println("/////////");
-//			System.out.println(doc.toString());
-//			System.out.println("/////////");
+			Document doc = Jsoup.connect(request).userAgent(USER_AGENT).timeout(10000).parser(parser).get();
 
 			// get all links
 			Elements links = doc.select("a[href]");
 			for (Element link : links) {
-
+				
 				// get attribute href and convert to specific format
 				String urlString = getDomainName(link.attr("href"));
 				if (!result.contains(urlString)) {
 					if (isCorrectFormat(urlString)) {
 						result.add(urlString);
-						System.out.println("crawl this url: " + urlString);
+						System.out.println("get this url: " + urlString);
 						System.out.println("/////////");
-						// String contentType1 = new URL(urlString).openConnection().getContentType();
-						// System.out.println("content type: " + contentType1);
+
 					}
 				}
 
@@ -195,7 +193,7 @@ public class Crawler {
 				System.out.println("geo resource: " + url);
 			}
 		}
-
+		
 	}
 
 }
