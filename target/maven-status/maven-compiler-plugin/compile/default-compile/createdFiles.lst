@@ -1,0 +1,11 @@
+idv\ray\geocrawler\javabean\json\GeoDataSerializer.class
+idv\ray\geocrawler\javabean\httpbody\HttpBody$TaskSetDeserializer.class
+idv\ray\geocrawler\javabean\geodata\Task.class
+idv\ray\geocrawler\javabean\geodata\Resource.class
+idv\ray\geocrawler\javabean\geodata\GeoData.class
+idv\ray\geocrawler\javabean\circularlist\CircularList.class
+idv\ray\geocrawler\javabean\httpbody\HttpBody$TaskSetSerializer.class
+idv\ray\geocrawler\javabean\json\JSONSerializable.class
+idv\ray\geocrawler\javabean\json\HttpBodySerializer.class
+idv\ray\geocrawler\javabean\httpbody\HttpBody.class
+idv\ray\geocrawler\javabean\json\JSONDeserializable.class
