@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import idv.ray.geocrawler.javabean.geodata.GeoData;
-import idv.ray.geocrawler.javabean.geodata.Resource;
+import idv.ray.geocrawler.javabean.geodata.Task;
 
 public class GeoDataSerializer implements JSONSerializable<GeoData>, JSONDeserializable<GeoData> {
 	@Override
@@ -30,8 +30,8 @@ public class GeoDataSerializer implements JSONSerializable<GeoData>, JSONDeseria
 
 	public static void main(String[] args) throws JsonParseException, JsonMappingException, IOException {
 		GeoDataSerializer s = new GeoDataSerializer();
-		String json = "{\"id\":5,\"level\":1,\"link\":\"abc.com\"}";
-		Resource task = (Resource) s.deserialize(json, Resource.class);
-		System.out.println(task);
+		String json = "{}";
+		Task task = (Task) s.deserialize(json, Task.class);
+		System.out.println(task.isValid());
 	}
 }

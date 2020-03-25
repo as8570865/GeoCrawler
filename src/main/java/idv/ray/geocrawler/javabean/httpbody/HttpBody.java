@@ -50,16 +50,20 @@ public class HttpBody {
 	@JsonDeserialize(using = TaskSetDeserializer.class)
 	@JsonSerialize(using = TaskSetSerializer.class)
 	@JsonProperty("taskSet")
-	private Set<Task> taskSet;
-	
+	private Set<Task> taskSet = new HashSet<Task>();
+
 	@JsonProperty("srcTask")
 	private Task srcTask;
-	
+
 	@JsonProperty("resource")
 	private boolean resource;
 
 	public HttpBody() {
 
+	}
+	
+	public HttpBody(Task srcTask) {
+		this.srcTask = srcTask;
 	}
 
 	public boolean isResource() {
@@ -70,10 +74,6 @@ public class HttpBody {
 		this.resource = isResource;
 	}
 
-	public HttpBody(Task srcTask) {
-		this.srcTask = srcTask;
-		taskSet = new HashSet<Task>();
-	}
 
 	public Task getSrcTask() {
 		return srcTask;
@@ -84,4 +84,11 @@ public class HttpBody {
 
 	}
 
+	public Set<Task> getTaskSet() {
+		return taskSet;
+	}
+	
+	public void setTaskSet(Set<Task> taskSet) {
+		this.taskSet = taskSet;
+	}
 }

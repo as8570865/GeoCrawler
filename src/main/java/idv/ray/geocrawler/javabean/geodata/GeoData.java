@@ -77,8 +77,6 @@ public abstract class GeoData {
 		else
 			return true;
 	}
-	
-
 
 	@Override
 	public abstract String toString();
