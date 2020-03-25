@@ -80,10 +80,10 @@
 			<version>42.2.9</version>
 		</dependency>
 
-		<!-- GeoData -->
+		<!-- geocrawler-javabean -->
 		<dependency>
-			<groupId>idv.ray</groupId>
-			<artifactId>GeoData</artifactId>
+			<groupId>idv.ray.geocrawler</groupId>
+			<artifactId>geocrawler-javabean</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 

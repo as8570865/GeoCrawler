@@ -18,9 +18,9 @@
 	<util:map id="tableSchemaMap" map-class="java.util.HashMap"
 		key-type="java.lang.String" value-type="java.lang.String">
 		<entry key="resource"
-			value="id serial primary key, link text not null, level int not null" />
+			value="id serial primary key, link text not null, level int not null, srcTaskId int " />
 		<entry key="task"
-			value="id serial primary key, link text not null, level int not null, status boolean" />
+			value="id serial primary key, link text not null, level int not null, status boolean, srctaskid int" />
 	</util:map>
 
 </beans>

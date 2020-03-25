@@ -9,8 +9,8 @@
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<!-- Inject task service -->
-	<bean id="taskServiceImpl"
-		class="idv.ray.geocrawler.service.TaskServiceImpl">
+	<bean id="crawlerServiceImpl"
+		class="idv.ray.geocrawler.master.service.CrawlerServiceImpl">
 		<constructor-arg index="0" ref="seedMap" />
 		<constructor-arg index="1" ref="tableSchemaMap" />
 		<constructor-arg index="2" ref="taskDaoImpl" />

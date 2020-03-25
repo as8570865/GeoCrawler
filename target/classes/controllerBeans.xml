@@ -12,14 +12,14 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<!-- Inject test controller -->
 	<bean id="testController"
-		class="idv.ray.geocrawler.controller.TestController">
-		<property name="taskService" ref="taskServiceImpl" />
+		class="idv.ray.geocrawler.master.controller.TestController">
+		<property name="crawlerService" ref="crawlerServiceImpl" />
 	</bean>
 
 	<!-- Inject init controller -->
 	<bean id="initController"
-		class="idv.ray.geocrawler.controller.InitController">
-		<constructor-arg ref="taskServiceImpl" />
+		class="idv.ray.geocrawler.master.controller.InitController">
+		<constructor-arg ref="crawlerServiceImpl" />
 	</bean>
 
 	<!-- Inject geoData controller <bean id="geoDataController" class="ray.geocrawler.controller.GeoDataController"> 
@@ -30,8 +30,8 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<!-- task controller -->
 	<bean id="taskController"
-		class="idv.ray.geocrawler.controller.TaskController">
-		<constructor-arg index="0" ref="taskServiceImpl" />
+		class="idv.ray.geocrawler.master.controller.TaskController">
+		<constructor-arg index="0" ref="crawlerServiceImpl" />
 	</bean>
 
 </beans>

@@ -10,9 +10,9 @@ http://www.springframework.org/schema/util
 http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<context:component-scan
-		base-package="ray.geocrawler.controller" />
+		base-package="idv.ray.geocrawler.master.controller" />
 	<context:component-scan
-		base-package="ray.geocrawler.dao" />
+		base-package="idv.ray.geocrawler.master.dao" />
 
 
 	<bean
@@ -37,7 +37,7 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 		<property name="driverClassName"
 			value="org.postgresql.Driver" />
 		<property name="url"
-			value="jdbc:postgresql://localhost:5432/geocrawler_test" />
+			value="jdbc:postgresql://localhost:5432/geocrawler" />
 		<property name="username" value="postgres" />
 		<property name="password" value="88888888" />
 	</bean>
