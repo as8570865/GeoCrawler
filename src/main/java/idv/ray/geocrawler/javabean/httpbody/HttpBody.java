@@ -57,10 +57,6 @@ public class HttpBody {
 
 	@JsonProperty("resource")
 	private boolean resource;
-
-	public HttpBody() {
-
-	}
 	
 	public HttpBody(Task srcTask) {
 		this.srcTask = srcTask;
