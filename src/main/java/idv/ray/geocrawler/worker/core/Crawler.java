@@ -1,4 +1,4 @@
-package idv.ray.geoworker;
+package idv.ray.geocrawler.worker.core;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -18,8 +18,8 @@ import org.jsoup.select.Elements;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import idv.ray.geodata.Task;
-import idv.ray.geostandard.WMS;
+import idv.ray.geocrawler.javabean.geodata.Task;
+import idv.ray.geocrawler.worker.geostandard.WMS;
 
 public class Crawler {
 	private static Pattern patternDomainName;
@@ -37,7 +37,7 @@ public class Crawler {
 	private Set<String> notOkUrlFormatSet;
 	private int maxPageNum;
 
-	public Crawler(Set<String> notOkUrlFormatSet, Set notGeoKeywordSet, int maxPageNum) {
+	public Crawler(Set<String> notOkUrlFormatSet, Set<String> notGeoKeywordSet, int maxPageNum) {
 		this.notOkUrlFormatSet = notOkUrlFormatSet;
 		this.maxPageNum = maxPageNum;
 		this.notGeoKeywordSet = notGeoKeywordSet;
@@ -128,17 +128,17 @@ public class Crawler {
 		System.out.println("Sending request..." + request);
 
 		try {
-			
+
 			Parser parser = Parser.htmlParser();
 			parser.settings(new ParseSettings(true, true));
-			
+
 			// need http protocol, set this as a Google bot agent
 			Document doc = Jsoup.connect(request).userAgent(USER_AGENT).timeout(10000).parser(parser).get();
 
 			// get all links
 			Elements links = doc.select("a[href]");
 			for (Element link : links) {
-				
+
 				// get attribute href and convert to specific format
 				String urlString = getDomainName(link.attr("href"));
 				if (!result.contains(urlString)) {
@@ -158,15 +158,24 @@ public class Crawler {
 		return result;
 	}
 
-	// if task is not resource, call crawl function
-	public Set<String> crawl(Task task) {
-		if (task.getLevel() == 0) {
+	public Set<Task> crawl(Task srcTask) {
+		Set<String> urlStringSet;
+
+		if (srcTask.getLevel() == 0) {
 			System.out.println("crawling by keyword...");
-			return crawlByKeyword(task.getLink());
+			urlStringSet = crawlByKeyword(srcTask.getLink());
 		} else {
 			System.out.println("crawling by url...");
-			return crawlByUrl(task.getLink());
+			urlStringSet = crawlByUrl(srcTask.getLink());
 		}
+
+		//insert url to each task
+		Set<Task> taskSet = new HashSet<Task>();
+		for (String url : urlStringSet) {
+			taskSet.add(new Task(url, srcTask.getLevel() + 1));
+		}
+
+		return taskSet;
 	}
 
 	public Set<String> getNotOkUrlFormatSet() {
@@ -193,7 +202,7 @@ public class Crawler {
 				System.out.println("geo resource: " + url);
 			}
 		}
-		
+
 	}
 
 }

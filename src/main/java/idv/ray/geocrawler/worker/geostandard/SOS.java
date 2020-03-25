@@ -1,4 +1,4 @@
-package idv.ray.geostandard;
+package idv.ray.geocrawler.worker.geostandard;
 
 import java.io.IOException;
 

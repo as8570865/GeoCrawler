@@ -1,21 +1,20 @@
-package idv.ray.geoworker;
+package idv.ray.geocrawler.worker.core;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import idv.ray.geodata.Task;
-import idv.ray.geostandard.GeoStandard;
-import idv.ray.geostandard.SOS;
-import idv.ray.geostandard.WFS;
-import idv.ray.geostandard.WMS;
-import idv.ray.geostandard.WMTS;
+import idv.ray.geocrawler.javabean.geodata.Task;
+import idv.ray.geocrawler.javabean.httpbody.HttpBody;
+import idv.ray.geocrawler.worker.geostandard.GeoStandard;
+import idv.ray.geocrawler.worker.geostandard.SOS;
+import idv.ray.geocrawler.worker.geostandard.WFS;
+import idv.ray.geocrawler.worker.geostandard.WMS;
+import idv.ray.geocrawler.worker.geostandard.WMTS;
 
 public class Worker {
 
@@ -42,41 +41,30 @@ public class Worker {
 		String startGeoType = (String) context.getBean("startGeoType");
 
 		// first get-task from master
-		Task task = new Task(new JSONObject(MasterConnector.getTask(new JSONObject(), startGeoType)));
+		Task srcTask = MasterConnector.getTask(new HttpBody(new Task()), startGeoType);
 
-		int level = 0;
 		while (true) {
-			
-			String geoType=task.getGeoType();
-			GeoStandard geoStandard = geoStandardMap.get(geoType);
-			JSONObject crawledResultJson = new JSONObject();
 
-			// create crawled result json
-			// put the task id
-			crawledResultJson.put("taskId", task.getId());
+			String geoType = srcTask.getGeoType();
+			GeoStandard geoStandard = geoStandardMap.get(geoType);
+
+			// create a httpBody with source task
+			HttpBody httpBody = new HttpBody(srcTask);
 
 			// check if task is a geo-resource
-			if (geoStandard.isGeoResource(task.getLink())) {
-				System.out.println("this task is geo-resource........");
-				crawledResultJson.put("type", "resource");
+			// if it's georesource
+			if (geoStandard.isGeoResource(srcTask.getLink())) {
+				System.out.println("this task is a georesource........");
+				httpBody.setResource(true);
+				// it's not georesource
 			} else {
-				System.out.println("this task is \"not\" geo-resource........");
-
+				System.out.println("this task is \"not\" a geo-resource........");
 				Crawler crawler = (Crawler) context.getBean("crawler");
-				Set<String> resultSet = crawler.crawl(task);
-				JSONObject resultJson = new JSONObject();
-				JSONArray urlArr = new JSONArray();
-				for (String url : resultSet) {
-					urlArr.put(url);
-				}
-				crawledResultJson.put("type", "task");
-				resultJson.put("value", urlArr);
-				crawledResultJson.put("result", resultJson);
-
+				Set<Task> taskSet = crawler.crawl(srcTask);
+				httpBody.setTaskSet(taskSet);
 			}
-
-			task = new Task(new JSONObject(MasterConnector.getTask(crawledResultJson, geoType)));
-			if (task.getLevel() > this.maxLevel) {
+			srcTask = MasterConnector.getTask(httpBody, geoType);
+			if (srcTask.getLevel() > this.maxLevel) {
 				System.out.println("beyond max level, crawler finished");
 				return;
 			}

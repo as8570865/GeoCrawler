@@ -2,8 +2,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>idv.ray</groupId>
-	<artifactId>GeoWorker</artifactId>
+	<groupId>idv.ray.geocrawler</groupId>
+	<artifactId>geocrawler-worker</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
 	<dependencies>
@@ -32,10 +32,10 @@
 			<version>20190722</version>
 		</dependency>
 
-		<!-- GeoData -->
+		<!-- geocrawler-javabean -->
 		<dependency>
-			<groupId>idv.ray</groupId>
-			<artifactId>GeoData</artifactId>
+			<groupId>idv.ray.geocrawler</groupId>
+			<artifactId>geocrawler-javabean</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
 
