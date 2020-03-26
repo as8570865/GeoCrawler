@@ -21,7 +21,22 @@ public abstract class GeoData {
 	public GeoData() {
 
 	}
-	
+
+	public GeoData(String link, int level, String geoType, int srcTaskId) {
+		this.link = link;
+		this.level = level;
+		this.geoType = geoType;
+		this.srcTaskId = srcTaskId;
+	}
+
+	public GeoData(int id, String link, int level, String geoType, int srcTaskId) {
+		this.id = id;
+		this.link = link;
+		this.level = level;
+		this.geoType = geoType;
+		this.srcTaskId = srcTaskId;
+	}
+
 	public int getSrcTaskId() {
 		return srcTaskId;
 	}
@@ -32,10 +47,6 @@ public abstract class GeoData {
 
 	public String getGeoType() {
 		return geoType;
-	}
-
-	public void setGeoType(String geoType) {
-		this.geoType = geoType;
 	}
 
 	public long getTime() {
@@ -49,25 +60,13 @@ public abstract class GeoData {
 	public int getLevel() {
 		return level;
 	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
+	
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getLink() {
 		return link;
-	}
-
-	public void setLink(String link) {
-		this.link = link;
 	}
 
 	@JsonIgnore

@@ -11,19 +11,12 @@ public class Task extends GeoData {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Task(int id) {
-		this.id = id;
+	public Task(String link, int level, String geoType, int srcTaskId) {
+		super(link, level, geoType, srcTaskId);
 	}
 
-	public Task(String link, int level) {
-		this.link = link;
-		this.level = level;
-
-	}
-
-	public Task(String link, int level, String geoType) {
-		this(link, level);
-		this.setGeoType(geoType);
+	public Task(int id, String link, int level, String geoType, int srcTaskId) {
+		super(id, link, level, geoType, srcTaskId);
 	}
 
 	@Override

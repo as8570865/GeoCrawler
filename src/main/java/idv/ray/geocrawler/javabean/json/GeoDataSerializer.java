@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import idv.ray.geocrawler.javabean.geodata.GeoData;
+import idv.ray.geocrawler.javabean.geodata.Resource;
 import idv.ray.geocrawler.javabean.geodata.Task;
 
 public class GeoDataSerializer implements JSONSerializable<GeoData>, JSONDeserializable<GeoData> {
@@ -29,9 +30,11 @@ public class GeoDataSerializer implements JSONSerializable<GeoData>, JSONDeseria
 	}
 
 	public static void main(String[] args) throws JsonParseException, JsonMappingException, IOException {
-		GeoDataSerializer s = new GeoDataSerializer();
-		String json = "{}";
-		Task task = (Task) s.deserialize(json, Task.class);
-		System.out.println(task.isValid());
+//		GeoDataSerializer s = new GeoDataSerializer();
+//		String json = "{}";
+//		Task task = (Task) s.deserialize(json, Task.class);
+//		System.out.println(task.isValid());
+//		
+//		Resource t=new Resource("sdf",3,5);
 	}
 }

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import idv.ray.geocrawler.javabean.geodata.Task;
 import idv.ray.geocrawler.javabean.httpbody.HttpBody;
 
 public class HttpBodySerializer implements JSONSerializable<HttpBody>, JSONDeserializable<HttpBody> {
@@ -39,18 +38,14 @@ public class HttpBodySerializer implements JSONSerializable<HttpBody>, JSONDeser
 //				+ "      }\r\n" + "    ]\r\n" + "}";
 //		HttpBody httpBody = (HttpBody) s.deserialize(json, HttpBody.class);
 
-		Task srcTask = new Task("abc.com", 5);
-		Task t = new Task("asd", 3);
-		Task t1 = new Task("dfg", 3);
-		Task t2 = new Task("wer", 3);
-		HttpBody httpBody = new HttpBody(srcTask);
+		//HttpBody httpBody = new HttpBody(srcTask);
 //		httpBody.addTask(t);
 //		httpBody.addTask(t1);
 //		httpBody.addTask(t2);
 
-		String j = "{\"taskSet\":[],\"srcTask\":{\"id\":0,\"level\":5,\"link\":\"abc.com\",\"time\":0,\"geoType\":null,\"srcTaskId\":0,\"running\":false},\"resource\":false}";
+		String j = "{\"urlSet\":[\"dfg.com\",\"abc.com\",\"fgh.com\"],\"srcTask\":{\"id\":0,\"level\":5,\"link\":\"abc.com\",\"time\":0,\"geoType\":null,\"srcTaskId\":0,\"running\":false},\"resource\":false}";
 
-		System.out.println(s.deserialize(j, HttpBody.class).getTaskSet().isEmpty());
+		System.out.println(s.serialize(s.deserialize(j, HttpBody.class)));
 
 	}
 

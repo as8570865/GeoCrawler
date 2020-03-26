@@ -20,46 +20,50 @@ import idv.ray.geocrawler.javabean.geodata.Task;
 
 public class HttpBody {
 
-	static class TaskSetSerializer extends JsonSerializer<Set<Task>> {
+	static class UrlSetSerializer extends JsonSerializer<Set<String>> {
 
 		@Override
-		public void serialize(Set<Task> value, JsonGenerator jgen, SerializerProvider serializers) throws IOException {
+		public void serialize(Set<String> value, JsonGenerator jgen, SerializerProvider serializers)
+				throws IOException {
 			jgen.writeStartArray();
-			for (Task task : value) {
-				jgen.writeObject(task);
+			for (String urls : value) {
+				jgen.writeObject(urls);
 			}
 			jgen.writeEndArray();
 		}
 	}
 
-	static class TaskSetDeserializer extends JsonDeserializer<Set<Task>> {
+	static class UrlSetDeserializer extends JsonDeserializer<Set<String>> {
 
 		@Override
-		public Set<Task> deserialize(JsonParser jsonParser, DeserializationContext ctxt)
+		public Set<String> deserialize(JsonParser jsonParser, DeserializationContext ctxt)
 				throws IOException, JsonProcessingException {
 			ObjectMapper mapper = new ObjectMapper();
 			String jsonString = jsonParser.readValueAsTree().toString();
-			Set<Task> taskSet = mapper.readValue(jsonString,
-					mapper.getTypeFactory().constructCollectionType(Set.class, Task.class));
+			Set<String> urlSet = mapper.readValue(jsonString,
+					mapper.getTypeFactory().constructCollectionType(Set.class, String.class));
 
-			return taskSet;
+			return urlSet;
 		}
 
 	}
 
-	@JsonDeserialize(using = TaskSetDeserializer.class)
-	@JsonSerialize(using = TaskSetSerializer.class)
-	@JsonProperty("taskSet")
-	private Set<Task> taskSet = new HashSet<Task>();
+	@JsonDeserialize(using = UrlSetDeserializer.class)
+	@JsonSerialize(using = UrlSetSerializer.class)
+	@JsonProperty("urlSet")
+	private Set<String> urlSet = new HashSet<String>();
 
 	@JsonProperty("srcTask")
 	private Task srcTask;
 
 	@JsonProperty("resource")
 	private boolean resource;
-	
+
 	public HttpBody(Task srcTask) {
 		this.srcTask = srcTask;
+	}
+
+	public HttpBody() {
 	}
 
 	public boolean isResource() {
@@ -70,21 +74,20 @@ public class HttpBody {
 		this.resource = isResource;
 	}
 
-
 	public Task getSrcTask() {
 		return srcTask;
 	}
 
-	public void addTask(Task task) {
-		taskSet.add(task);
+	public void addTask(String urlString) {
+		urlSet.add(urlString);
 
 	}
 
-	public Set<Task> getTaskSet() {
-		return taskSet;
+	public Set<String> getUrlSet() {
+		return urlSet;
 	}
-	
-	public void setTaskSet(Set<Task> taskSet) {
-		this.taskSet = taskSet;
+
+	public void setUrlSet(Set<String> urlSet) {
+		this.urlSet = urlSet;
 	}
 }
