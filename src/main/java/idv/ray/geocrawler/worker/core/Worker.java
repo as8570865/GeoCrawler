@@ -60,8 +60,8 @@ public class Worker {
 			} else {
 				System.out.println("this task is \"not\" a geo-resource........");
 				Crawler crawler = (Crawler) context.getBean("crawler");
-				Set<Task> taskSet = crawler.crawl(srcTask);
-				httpBody.setTaskSet(taskSet);
+				Set<String> urlSet = crawler.crawl(srcTask);
+				httpBody.setUrlSet(urlSet);
 			}
 			srcTask = MasterConnector.getTask(httpBody, geoType);
 			if (srcTask.getLevel() > this.maxLevel) {

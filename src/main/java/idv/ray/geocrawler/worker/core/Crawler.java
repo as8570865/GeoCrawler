@@ -158,24 +158,16 @@ public class Crawler {
 		return result;
 	}
 
-	public Set<Task> crawl(Task srcTask) {
-		Set<String> urlStringSet;
+	public Set<String> crawl(Task srcTask) {
 
 		if (srcTask.getLevel() == 0) {
 			System.out.println("crawling by keyword...");
-			urlStringSet = crawlByKeyword(srcTask.getLink());
+			return crawlByKeyword(srcTask.getLink());
 		} else {
 			System.out.println("crawling by url...");
-			urlStringSet = crawlByUrl(srcTask.getLink());
+			return crawlByUrl(srcTask.getLink());
 		}
 
-		//insert url to each task
-		Set<Task> taskSet = new HashSet<Task>();
-		for (String url : urlStringSet) {
-			taskSet.add(new Task(url, srcTask.getLevel() + 1));
-		}
-
-		return taskSet;
 	}
 
 	public Set<String> getNotOkUrlFormatSet() {
