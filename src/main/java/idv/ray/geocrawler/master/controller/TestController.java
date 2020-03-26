@@ -22,7 +22,7 @@ public class TestController {
 	@RequestMapping(value = "/{geoType}/test", method = RequestMethod.GET)
 	public void test( @PathVariable("geoType") String geoType) {
 
-		Task t=crawlerService.getNext(geoType);
+		Task t=crawlerService.getNextTask();
 		System.out.println("task: "+t.toString());
 	}
 

@@ -10,14 +10,9 @@ import idv.ray.geocrawler.javabean.geodata.Task;
 public class TaskMapper implements RowMapper<Task> {
 
 	public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
-		Task task = new Task();
-		task.setId(rs.getInt("id"));
-		task.setLink(rs.getString("link"));
-		task.setLevel(rs.getInt("level"));
+		Task task = new Task(rs.getInt("id"),rs.getString("link"),rs.getInt("level"),rs.getString("geoType"),rs.getInt("srcTaskId"));
 		task.setRunning(rs.getBoolean("status"));
-
 		return task;
-
 	}
 
 }

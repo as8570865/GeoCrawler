@@ -13,6 +13,8 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 		base-package="idv.ray.geocrawler.master.controller" />
 	<context:component-scan
 		base-package="idv.ray.geocrawler.master.dao" />
+	<context:component-scan
+		base-package="idv.ray.geocrawler.master.service" />
 
 
 	<bean

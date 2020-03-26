@@ -9,26 +9,24 @@ import idv.ray.geocrawler.javabean.geodata.GeoData;
 public abstract class GeoDataDaoAbst<T extends GeoData> implements GeoDataDao<T> {
 
 	// set in constructor
-	protected String geoDataType;
 	protected JdbcTemplate jdbcTemplate;
 
-	// set in setGeoType
-	protected String geoType;
-	protected String tableName;
+	protected String dataType;
 
-	public GeoDataDaoAbst(DataSource ds,String geoDataType) {
+	public GeoDataDaoAbst(DataSource ds) {
 		this.jdbcTemplate = new JdbcTemplate(ds);
-		this.geoDataType = geoDataType;
 	}
-	
-	public void setGeoType(String geoType) {
-		this.geoType = geoType;
-		tableName = geoDataType + "_" + geoType;
-		// System.out.println("setting geoType in resourceDaoImpl ");
+
+	public void init(String tableSchema) {
+		// System.out.println("checking " + geoType + " resource table...");
+		// String checkTableExists = "show tables like '" + this.tableName + "'";
+		String sql = "CREATE TABLE IF NOT EXISTS " + this.dataType + "(" + tableSchema + ");";
+		jdbcTemplate.execute(sql);
+
 	}
-	
+
 	public boolean containsLink(String link) {
-		String sql = "select exists (select 1 from " + this.tableName + " where link = '" + link + "')";
+		String sql = "select exists (select 1 from " + this.dataType + " where link = '" + link + "')";
 		return jdbcTemplate.queryForObject(sql, boolean.class);
 	}
 }

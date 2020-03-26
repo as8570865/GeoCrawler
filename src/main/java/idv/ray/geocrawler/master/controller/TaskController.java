@@ -1,9 +1,11 @@
 package idv.ray.geocrawler.master.controller;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
 
-import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,20 +25,23 @@ import idv.ray.geocrawler.master.service.CrawlerService;
 @Controller
 public class TaskController {
 
+	@Autowired
 	private CrawlerService crawlerService;
 
-	public TaskController(CrawlerService crawlerService) {
-		this.crawlerService = crawlerService;
-	}
+	@Autowired
+	@Qualifier("tableSchemaMap")
+	private Map<String, String> tableSchemaMap;
+
+	@Autowired
+	@Qualifier("seedMap")
+	private Map<String, List<String>> seedMap;
 
 	// when first calling, set task.id=0
 	@RequestMapping(value = "/{geoType}", method = RequestMethod.POST)
 	public @ResponseBody String post(@RequestBody String reqString, @PathVariable("geoType") String geoType)
-			throws ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchMethodException,
-			SecurityException, IllegalArgumentException, InvocationTargetException, JSONException, JsonParseException,
-			JsonMappingException, IOException {
+			throws JsonParseException, JsonMappingException, IOException {
 
-		if (!crawlerService.isValidGeotype(geoType))
+		if (!seedMap.containsKey(geoType))
 			return "wrong geotype!!";
 
 		// parse request string to HttpBody object
@@ -44,7 +49,7 @@ public class TaskController {
 		crawlerService.post(geoType, httpBody);
 
 		// return a different geotype task
-		Task t = crawlerService.getNext(crawlerService.getNextGeoType());
+		Task t = crawlerService.getNextTask();
 
 		if (!t.isValid()) {
 			System.out.println("no prepared task!!");
@@ -53,6 +58,16 @@ public class TaskController {
 		System.out.println("//////////////");
 		return new GeoDataSerializer().serialize(t);
 
+	}
+
+	@RequestMapping(value = "/init", produces = "application/json")
+	public @ResponseBody String init() {
+		if (!crawlerService.isInitialized()) {
+			crawlerService.init(tableSchemaMap, seedMap);
+			return "successfully initialized!";
+		} else {
+			return "already initialized!";
+		}
 	}
 
 }

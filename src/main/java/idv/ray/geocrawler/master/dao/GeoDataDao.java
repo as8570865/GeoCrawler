@@ -6,8 +6,6 @@ import idv.ray.geocrawler.javabean.geodata.GeoData;
 
 public interface GeoDataDao <T extends GeoData>{
 	
-	public void setGeoType(String geoType);
-	
 	public T get(int id);
 	
 	public List<T>getAll();

@@ -4,23 +4,32 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import idv.ray.geocrawler.javabean.geodata.Resource;
 
+@Configuration
 public class ResourceDaoImpl extends ResourceDao {
 
-	public ResourceDaoImpl(DataSource ds, String dataType) {
-		super(ds, dataType);
-		// TODO Auto-generated constructor stub
+	@Bean
+	public ResourceDaoImpl rDao(DataSource dataSource) {
+		return new ResourceDaoImpl(dataSource);
+	}
+
+	public ResourceDaoImpl(DataSource ds) {
+		super(ds);	
+		this.dataType = "resource";
 	}
 
 	public Resource get(int id) {
-		String sql = "select* from " + tableName + " where id=?";
+		String sql = "select* from resource where id=?";
 		Resource resource = jdbcTemplate.queryForObject(sql, new Object[] { id }, new ResourceMapper());
 		return resource;
 	}
 
 	public List<Resource> getAll() {
-		String sql = "select* from " + tableName;
+		String sql = "select* from resource";
 		return jdbcTemplate.query(sql, new ResourceMapper());
 	}
 
@@ -29,16 +38,9 @@ public class ResourceDaoImpl extends ResourceDao {
 
 	}
 
-	public void init(String tableSchema) {
-		// System.out.println("checking " + geoType + " resource table...");
-		// String checkTableExists = "show tables like '" + this.tableName + "'";
-		String sql = "CREATE TABLE IF NOT EXISTS " + this.tableName + "(" + tableSchema + ");";
-		jdbcTemplate.execute(sql);
-
-	}
-
 	public void insert(Resource rs) {
-		String sql = "insert into " + tableName + "(link,level)values('" + rs.getLink() + "',"+rs.getLevel()+")";
+		String sql = "insert into resource (link,level,srctaskid,geotype)values('" + rs.getLink() + "'," + rs.getLevel()
+				+ "," + rs.getSrcTaskId() + ",'" + rs.getGeoType() + "')";
 		jdbcTemplate.execute(sql);
 		// System.out.println("inserting resource: " + rs.toString());
 	}

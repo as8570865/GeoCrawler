@@ -12,10 +12,7 @@ public class ResourceMapper implements RowMapper<Resource> {
 	public Resource mapRow(ResultSet rs, int rowNum) throws SQLException {
 
 		if (rs.next()) {
-			Resource resource = new Resource();
-			resource.setId(rs.getInt("id"));
-			resource.setLink(rs.getString("link"));
-			resource.setLevel(rs.getInt("level"));
+			Resource resource = new Resource(rs.getInt("id"),rs.getString("link"),rs.getInt("level"),rs.getString("geoType"),rs.getInt("srcTaskId"));
 			return resource;
 		} else
 			return null;
