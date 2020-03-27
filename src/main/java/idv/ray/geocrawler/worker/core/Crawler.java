@@ -1,9 +1,6 @@
 package idv.ray.geocrawler.worker.core;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -19,7 +16,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import idv.ray.geocrawler.javabean.geodata.Task;
-import idv.ray.geocrawler.worker.geostandard.WMS;
 
 public class Crawler {
 	private static Pattern patternDomainName;
@@ -27,49 +23,18 @@ public class Crawler {
 	public static final String USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
 	private static final String DOMAIN_NAME_PATTERN = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)";
 
-	private Set<String> notGeoKeywordSet;
-
 	static {
 		patternDomainName = Pattern.compile(DOMAIN_NAME_PATTERN);
 	}
 
-	// not-allowed url format set
-	private Set<String> notOkUrlFormatSet;
 	private int maxPageNum;
 
-	public Crawler(Set<String> notOkUrlFormatSet, Set<String> notGeoKeywordSet, int maxPageNum) {
-		this.notOkUrlFormatSet = notOkUrlFormatSet;
+	private UrlFilter urlFilter;
+
+	public Crawler(int maxPageNum) {
 		this.maxPageNum = maxPageNum;
-		this.notGeoKeywordSet = notGeoKeywordSet;
 		System.out.println("max crawled page is: " + maxPageNum);
-		System.out.println("not ok formats are: " + notOkUrlFormatSet);
-	}
-
-	// check url file format (eg. not pdf. or others...)
-	private boolean isCorrectFormat(String urlString) throws MalformedURLException, IOException {
-
-		if (!urlString.isEmpty()) {
-			if (!urlString.contains("pdf")) {
-				for (String notGeoKeywordString : notGeoKeywordSet) {
-					if (urlString.contains(notGeoKeywordString)) {
-						return false;
-					}
-				}
-
-				HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlString).openConnection();
-				urlConnection.setConnectTimeout(10000); // 5 sec
-				urlConnection.setReadTimeout(10000); // 10 sec
-				String contentType = urlConnection.getContentType();
-				System.out.println("content type: " + contentType);
-				if (contentType != null) {
-					if (!notOkUrlFormatSet.contains(contentType)) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-
+		// System.out.println("not ok formats are: " + notOkUrlFormatSet);
 	}
 
 	// check url pattern
@@ -105,7 +70,7 @@ public class Crawler {
 						// use regex to get domain name
 						String urlString = getDomainName(temp);
 						if (!result.contains(urlString)) {
-							if (isCorrectFormat(urlString)) {
+							if (urlFilter.isCorrectFormat(urlString)) {
 								System.out.println("get this url: " + urlString);
 								System.out.println("/////////");
 								result.add(urlString);
@@ -142,7 +107,7 @@ public class Crawler {
 				// get attribute href and convert to specific format
 				String urlString = getDomainName(link.attr("href"));
 				if (!result.contains(urlString)) {
-					if (isCorrectFormat(urlString)) {
+					if (urlFilter.isCorrectFormat(urlString)) {
 						result.add(urlString);
 						System.out.println("get this url: " + urlString);
 						System.out.println("/////////");
@@ -170,10 +135,6 @@ public class Crawler {
 
 	}
 
-	public Set<String> getNotOkUrlFormatSet() {
-		return notOkUrlFormatSet;
-	}
-
 	public int getMaxPageNum() {
 		return maxPageNum;
 	}
@@ -183,18 +144,27 @@ public class Crawler {
 		notOkFormat.add("application/pdf");
 
 		ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
-		Crawler c = (Crawler) context.getBean("crawler");
+//		Crawler c = (Crawler) context.getBean("crawler");
+//
+//		Set<String> crawlResult = c.crawlByUrl("https://www.bgs.ac.uk/data/services/geolwms.html");
+//		// SOS sos = new SOS();
+//		WMS wms = new WMS();
+//		for (String url : crawlResult) {
+//			System.out.println("url: " + url);
+//			if (wms.isGeoResource(url)) {
+//				System.out.println("geo resource: " + url);
+//			}
+//		}
 
-		Set<String> crawlResult = c.crawlByUrl("https://www.bgs.ac.uk/data/services/geolwms.html");
-		// SOS sos = new SOS();
-		WMS wms = new WMS();
-		for (String url : crawlResult) {
-			System.out.println("url: " + url);
-			if (wms.isGeoResource(url)) {
-				System.out.println("geo resource: " + url);
-			}
-		}
+		UrlFilter urlFilter = (UrlFilter) context.getBean("urlFilter");
+		System.out.println(urlFilter.isCorrectFormat("123"));
 
+//		Set<String> s = (Set<String>) context.getBean("unacceptableUrlFormatSet");
+//		System.out.println(s);
+
+//		String[] beans = context.getBeanDefinitionNames();
+//		for (String s : beans)
+//			System.out.println(s);
 	}
 
 }

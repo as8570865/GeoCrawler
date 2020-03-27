@@ -11,7 +11,7 @@ http://www.springframework.org/schema/util
 http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<context:component-scan
-		base-package="com.programcreek.examples" />
+		base-package="idv.ray.geocrawler.worker.core, idv.ray.geocrawler.worker.geostandard" />
 
 	<!-- start geoType -->
 	<bean id="startGeoType" class="java.lang.String">
@@ -20,21 +20,19 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<!-- crawler bean -->
 	<bean id="crawler" class="idv.ray.geocrawler.worker.core.Crawler">
-		<constructor-arg index="0" ref="notOkUrlFormatSet" />
-		<constructor-arg index="1" ref="notGeoKeywordSet" />
-		<constructor-arg index="2" value="3" /><!-- set the number 
+		<constructor-arg value="3" /><!-- set the number 
 			of google search page -->
 	</bean>
 
 	<!-- notOkUrlFormatSet bean -->
-	<util:set id="notOkUrlFormatSet" set-class="java.util.HashSet"
-		value-type="java.lang.String">
+	<util:set id="unacceptableUrlFormatSet"
+		set-class="java.util.HashSet" value-type="java.lang.String">
 		<value>application/pdf</value>
 	</util:set>
-	
+
 	<!-- impossible georesource keyword set -->
-	<util:set id="notGeoKeywordSet" set-class="java.util.HashSet"
-		value-type="java.lang.String">
+	<util:set id="unacceptableGeoKeywordSet"
+		set-class="java.util.HashSet" value-type="java.lang.String">
 		<value>youtube</value>
 		<value>wiki</value>
 		<value>facebook</value>
