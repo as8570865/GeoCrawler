@@ -8,13 +8,6 @@
            http://www.springframework.org/schema/util 
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<!-- Inject task service 
-	<bean id="crawlerServiceImpl"
-		class="idv.ray.geocrawler.master.service.CrawlerServiceImpl">
-		<constructor-arg index="0" ref="taskDaoImpl" />
-		<constructor-arg index="1" ref="resourceDaoImpl" />
-	</bean>-->
-
 	<!-- seeds map -->
 	<util:map id="seedMap" map-class="java.util.HashMap"
 		key-type="java.lang.String" value-type="java.lang.String">

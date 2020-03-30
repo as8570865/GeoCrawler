@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,11 @@ public class TaskController {
 	@Autowired
 	@Qualifier("seedMap")
 	private Map<String, List<String>> seedMap;
+	
+	@PostConstruct
+	public void init() {
+		crawlerService.init(tableSchemaMap, seedMap);
+	}	
 
 	// when first calling, set task.id=0
 	@RequestMapping(value = "/{geoType}", method = RequestMethod.POST)
@@ -60,14 +67,17 @@ public class TaskController {
 
 	}
 
-	@RequestMapping(value = "/init", produces = "application/json")
-	public @ResponseBody String init() {
-		if (!crawlerService.isInitialized()) {
-			crawlerService.init(tableSchemaMap, seedMap);
-			return "successfully initialized!";
-		} else {
-			return "already initialized!";
-		}
+//	@RequestMapping(value = "/init", produces = "application/json")
+//	public @ResponseBody String init() {
+//		
+//			crawlerService.init(tableSchemaMap, seedMap);
+//			return "successfully initialized!";
+//		
+//	}
+
+	@RequestMapping(value = "/test", produces = "application/json")
+	public void test() {
+		System.out.println(crawlerService.isInitialized());
 	}
 
 }

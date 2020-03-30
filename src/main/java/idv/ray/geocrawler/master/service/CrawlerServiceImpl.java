@@ -1,13 +1,16 @@
 package idv.ray.geocrawler.master.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import idv.ray.geocrawler.javabean.circularlist.CircularList;
 import idv.ray.geocrawler.javabean.geodata.Resource;
@@ -15,6 +18,7 @@ import idv.ray.geocrawler.javabean.geodata.Task;
 import idv.ray.geocrawler.javabean.httpbody.HttpBody;
 import idv.ray.geocrawler.master.dao.ResourceDao;
 import idv.ray.geocrawler.master.dao.TaskDao;
+import idv.ray.geocrawler.master.dao.TaskDaoImpl;
 
 @Configuration
 public class CrawlerServiceImpl implements CrawlerService {
@@ -53,17 +57,18 @@ public class CrawlerServiceImpl implements CrawlerService {
 		}
 
 		private void init() {
+			if (!tDao.isInitialized()) {
+				// init table
+				rDao.init(tableSchemaMap.get("resource"));
+				tDao.init(tableSchemaMap.get("task"));
 
-			// init table
-			rDao.init(tableSchemaMap.get("resource"));
-			tDao.init(tableSchemaMap.get("task"));
-
-			// init seed
-			for (String geoType : seedMap.keySet()) {
-				List<String> seeds = seedMap.get(geoType);
-				for (String seed : seeds) {
-					Task task = new Task(seed, 0, geoType, 0);// level=0
-					tDao.insert(task);
+				// init seed
+				for (String geoType : seedMap.keySet()) {
+					List<String> seeds = seedMap.get(geoType);
+					for (String seed : seeds) {
+						Task task = new Task(seed, 0, geoType, 0);// level=0
+						tDao.insert(task);
+					}
 				}
 			}
 		}
@@ -77,14 +82,14 @@ public class CrawlerServiceImpl implements CrawlerService {
 
 	private boolean initialized = false;
 
+	private GeoTypeAlternater geoTypeAlternater;
+
+	private Task srcTask;
+
 	@Bean
 	public CrawlerServiceImpl crawlerService() {
 		return new CrawlerServiceImpl();
 	}
-
-	private GeoTypeAlternater geoTypeAlternater;
-
-	private Task srcTask;
 
 	private void setSrcTask(Task prevTask) {
 		this.srcTask = prevTask;
@@ -165,7 +170,7 @@ public class CrawlerServiceImpl implements CrawlerService {
 	}
 
 	public boolean isInitialized() {
-		return initialized;
+		return tDao.isInitialized();
 	}
 
 	private void setInitialized(boolean initialized) {

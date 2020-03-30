@@ -16,5 +16,7 @@ public interface GeoDataDao <T extends GeoData>{
 	
 	public void init(String tableSchema);
 	
+	public boolean isInitialized();
+	
 	public boolean containsLink(String link);
 }
