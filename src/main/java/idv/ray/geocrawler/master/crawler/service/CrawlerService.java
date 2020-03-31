@@ -1,19 +1,17 @@
-package idv.ray.geocrawler.master.service;
+package idv.ray.geocrawler.master.crawler.service;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import idv.ray.geocrawler.javabean.geodata.Task;
 import idv.ray.geocrawler.javabean.httpbody.HttpBody;
 
 public interface CrawlerService {
 
-	public void init(Map<String, String> tableSchemaMap, Map<String, List<String>> seedMap);
-
-	public boolean isInitialized();
+	public void init();
 
 	public Task getNextTask();
 
 	public void post(String geoType, HttpBody reqBody);
 
+	public Set<String> getGeoTypeSet();
 }

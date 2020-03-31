@@ -10,11 +10,11 @@ http://www.springframework.org/schema/util
 http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<context:component-scan
-		base-package="idv.ray.geocrawler.master.controller" />
+		base-package="idv.ray.geocrawler.master.crawler.controller" />
 	<context:component-scan
 		base-package="idv.ray.geocrawler.master.dao" />
 	<context:component-scan
-		base-package="idv.ray.geocrawler.master.service" />
+		base-package="idv.ray.geocrawler.master.crawler.service" />
 
 
 	<bean

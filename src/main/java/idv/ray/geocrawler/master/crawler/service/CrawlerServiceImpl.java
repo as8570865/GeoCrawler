@@ -1,16 +1,15 @@
-package idv.ray.geocrawler.master.service;
+package idv.ray.geocrawler.master.crawler.service;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import idv.ray.geocrawler.javabean.circularlist.CircularList;
 import idv.ray.geocrawler.javabean.geodata.Resource;
@@ -18,7 +17,6 @@ import idv.ray.geocrawler.javabean.geodata.Task;
 import idv.ray.geocrawler.javabean.httpbody.HttpBody;
 import idv.ray.geocrawler.master.dao.ResourceDao;
 import idv.ray.geocrawler.master.dao.TaskDao;
-import idv.ray.geocrawler.master.dao.TaskDaoImpl;
 
 @Configuration
 public class CrawlerServiceImpl implements CrawlerService {
@@ -44,44 +42,21 @@ public class CrawlerServiceImpl implements CrawlerService {
 
 		}
 
-	}
-
-	private class TableInitializer {
-
-		private Map<String, String> tableSchemaMap;
-		private Map<String, List<String>> seedMap;
-
-		private TableInitializer(Map<String, String> tableSchemaMap, Map<String, List<String>> seedMap) {
-			this.seedMap = seedMap;
-			this.tableSchemaMap = tableSchemaMap;
-		}
-
-		private void init() {
-			if (!tDao.isInitialized()) {
-				// init table
-				rDao.init(tableSchemaMap.get("resource"));
-				tDao.init(tableSchemaMap.get("task"));
-
-				// init seed
-				for (String geoType : seedMap.keySet()) {
-					List<String> seeds = seedMap.get(geoType);
-					for (String seed : seeds) {
-						Task task = new Task(seed, 0, geoType, 0);// level=0
-						tDao.insert(task);
-					}
-				}
-			}
-		}
-
-	}
+	}	
 
 	@Autowired
 	private TaskDao tDao;
 	@Autowired
 	private ResourceDao rDao;
 
-	private boolean initialized = false;
-
+	@Autowired
+	@Qualifier("tableSchemaMap")
+	private Map<String, String> tableSchemaMap;
+	
+	@Autowired
+	@Qualifier("seedMap")
+	private Map<String, List<String>> seedMap;
+	
 	private GeoTypeAlternater geoTypeAlternater;
 
 	private Task srcTask;
@@ -89,10 +64,6 @@ public class CrawlerServiceImpl implements CrawlerService {
 	@Bean
 	public CrawlerServiceImpl crawlerService() {
 		return new CrawlerServiceImpl();
-	}
-
-	private void setSrcTask(Task prevTask) {
-		this.srcTask = prevTask;
 	}
 
 	private void insertUrlkSet(Set<String> urlSet) {
@@ -117,11 +88,28 @@ public class CrawlerServiceImpl implements CrawlerService {
 		}
 	}
 
-	public void init(Map<String, String> tableSchemaMap, Map<String, List<String>> seedMap) {
-		TableInitializer ti = new TableInitializer(tableSchemaMap, seedMap);
+	@PostConstruct
+	public void init() {
 		geoTypeAlternater = new GeoTypeAlternater(new CircularList<String>(seedMap.keySet()));
-		ti.init();
-		setInitialized(true);
+		
+		//initital task and resource table
+		if (!tDao.isInitialized()) {
+			System.out.println("initializing crawler service...");
+			// init table
+			rDao.init(tableSchemaMap.get("resource"));
+			tDao.init(tableSchemaMap.get("task"));
+
+			// init seed
+			for (String geoType : seedMap.keySet()) {
+				List<String> seeds = seedMap.get(geoType);
+				for (String seed : seeds) {
+					Task task = new Task(seed, 0, geoType, 0);// level=0
+					tDao.insert(task);
+				}
+			}
+		} else {
+			System.out.println("cralwer service already initialized");
+		}
 	}
 
 	public Task getNextTask() {
@@ -169,12 +157,11 @@ public class CrawlerServiceImpl implements CrawlerService {
 		}
 	}
 
-	public boolean isInitialized() {
-		return tDao.isInitialized();
+	private void setSrcTask(Task prevTask) {
+		this.srcTask = prevTask;
 	}
-
-	private void setInitialized(boolean initialized) {
-		this.initialized = initialized;
+	
+	public Set<String> getGeoTypeSet(){
+		return seedMap.keySet();
 	}
-
 }

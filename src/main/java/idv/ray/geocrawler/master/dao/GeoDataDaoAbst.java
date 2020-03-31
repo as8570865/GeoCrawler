@@ -2,7 +2,6 @@ package idv.ray.geocrawler.master.dao;
 
 import javax.sql.DataSource;
 
-import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import idv.ray.geocrawler.javabean.geodata.GeoData;
