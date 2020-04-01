@@ -1,4 +1,4 @@
-package idv.ray.geocrawler.javabean.json;
+package idv.ray.geocrawler.util.jsonserializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 

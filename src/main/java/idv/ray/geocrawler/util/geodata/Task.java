@@ -1,4 +1,4 @@
-package idv.ray.geocrawler.javabean.geodata;
+package idv.ray.geocrawler.util.geodata;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

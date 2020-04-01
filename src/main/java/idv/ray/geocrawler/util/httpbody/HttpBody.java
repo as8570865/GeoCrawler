@@ -1,4 +1,4 @@
-package idv.ray.geocrawler.javabean.httpbody;
+package idv.ray.geocrawler.util.httpbody;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import idv.ray.geocrawler.javabean.geodata.Task;
+import idv.ray.geocrawler.util.geodata.Task;
 
 public class HttpBody {
 

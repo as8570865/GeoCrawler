@@ -1,4 +1,4 @@
-package idv.ray.geocrawler.javabean.json;
+package idv.ray.geocrawler.util.jsonserializer;
 
 import java.io.IOException;
 
@@ -7,7 +7,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import idv.ray.geocrawler.javabean.httpbody.HttpBody;
+import idv.ray.geocrawler.util.httpbody.HttpBody;
 
 public class HttpBodySerializer implements JSONSerializable<HttpBody>, JSONDeserializable<HttpBody> {
 

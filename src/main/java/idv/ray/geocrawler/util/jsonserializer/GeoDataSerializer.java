@@ -1,4 +1,4 @@
-package idv.ray.geocrawler.javabean.json;
+package idv.ray.geocrawler.util.jsonserializer;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -9,9 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import idv.ray.geocrawler.javabean.geodata.GeoData;
-import idv.ray.geocrawler.javabean.geodata.Resource;
-import idv.ray.geocrawler.javabean.geodata.Task;
+import idv.ray.geocrawler.util.geodata.GeoData;
 
 public class GeoDataSerializer implements JSONSerializable<GeoData>, JSONDeserializable<GeoData> {
 	@Override

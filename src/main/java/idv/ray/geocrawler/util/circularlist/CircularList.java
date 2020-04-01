@@ -1,4 +1,4 @@
-package idv.ray.geocrawler.javabean.circularlist;
+package idv.ray.geocrawler.util.circularlist;
 
 import java.util.ArrayList;
 import java.util.Set;

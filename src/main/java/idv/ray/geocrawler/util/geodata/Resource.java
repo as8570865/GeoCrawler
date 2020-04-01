@@ -1,4 +1,4 @@
-package idv.ray.geocrawler.javabean.geodata;
+package idv.ray.geocrawler.util.geodata;
 
 public class Resource extends GeoData {
 
