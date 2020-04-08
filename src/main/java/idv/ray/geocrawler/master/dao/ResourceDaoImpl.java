@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import idv.ray.geocrawler.javabean.geodata.Resource;
+import idv.ray.geocrawler.util.javabean.geodata.Resource;
 
 @Configuration
 public class ResourceDaoImpl extends ResourceDao {
@@ -19,7 +19,7 @@ public class ResourceDaoImpl extends ResourceDao {
 
 	public ResourceDaoImpl(DataSource ds) {
 		super(ds);	
-		this.dataType = "resource";
+		this.dataType = Resource.TYPE_NAME;
 	}
 
 	public Resource get(int id) {

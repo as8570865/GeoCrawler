@@ -2,7 +2,7 @@ package idv.ray.geocrawler.master.dao;
 
 import java.util.List;
 
-import idv.ray.geocrawler.javabean.geodata.GeoData;
+import idv.ray.geocrawler.util.javabean.geodata.GeoData;
 
 public interface GeoDataDao <T extends GeoData>{
 	

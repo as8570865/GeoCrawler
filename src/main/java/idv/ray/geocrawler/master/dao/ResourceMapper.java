@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import idv.ray.geocrawler.javabean.geodata.Resource;
+import idv.ray.geocrawler.util.javabean.geodata.Resource;
 
 public class ResourceMapper implements RowMapper<Resource> {
 

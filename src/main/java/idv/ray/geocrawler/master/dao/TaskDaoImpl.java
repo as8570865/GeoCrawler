@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import idv.ray.geocrawler.javabean.geodata.Task;
+import idv.ray.geocrawler.util.javabean.geodata.Task;
 
 @Configuration
 public class TaskDaoImpl extends TaskDao {
@@ -19,7 +19,7 @@ public class TaskDaoImpl extends TaskDao {
 
 	public TaskDaoImpl(DataSource ds) {
 		super(ds);
-		this.dataType = "task";
+		this.dataType = Task.TYPE_NAME;
 	}
 
 	public void insert(Task task) {

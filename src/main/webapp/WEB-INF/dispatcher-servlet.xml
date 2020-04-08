@@ -14,6 +14,8 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<context:component-scan
 		base-package="idv.ray.geocrawler.master.dao" />
 	<context:component-scan
+		base-package="idv.ray.geocrawler.master.hiberdao" />
+	<context:component-scan
 		base-package="idv.ray.geocrawler.master.crawler.service" />
 
 
@@ -39,7 +41,7 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 		<property name="driverClassName"
 			value="org.postgresql.Driver" />
 		<property name="url"
-			value="jdbc:postgresql://localhost:5432/geocrawler" />
+			value="jdbc:postgresql://localhost:5432/test" />
 		<property name="username" value="postgres" />
 		<property name="password" value="88888888" />
 	</bean>
@@ -48,5 +50,6 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<import resource="classpath:tablePropertiesBeans.xml" />
 	<import resource="classpath:serviceBeans.xml" />
 	<import resource="classpath:seedsBeans.xml" />
+	<import resource="classpath:persistence.xml" />
 
 </beans>

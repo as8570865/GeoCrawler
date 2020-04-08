@@ -2,7 +2,7 @@ package idv.ray.geocrawler.master.dao;
 
 import javax.sql.DataSource;
 
-import idv.ray.geocrawler.javabean.geodata.Resource;
+import idv.ray.geocrawler.util.javabean.geodata.Resource;
 
 public abstract class ResourceDao extends  GeoDataDaoAbst<Resource>{
 

@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import idv.ray.geocrawler.javabean.geodata.Task;
+import idv.ray.geocrawler.util.javabean.geodata.Task;
 
 public class TaskMapper implements RowMapper<Task> {
 

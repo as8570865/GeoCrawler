@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import idv.ray.geocrawler.javabean.circularlist.CircularList;
-import idv.ray.geocrawler.javabean.geodata.Resource;
-import idv.ray.geocrawler.javabean.geodata.Task;
-import idv.ray.geocrawler.javabean.httpbody.HttpBody;
 import idv.ray.geocrawler.master.dao.ResourceDao;
 import idv.ray.geocrawler.master.dao.TaskDao;
+import idv.ray.geocrawler.util.circularlist.CircularList;
+import idv.ray.geocrawler.util.javabean.geodata.Resource;
+import idv.ray.geocrawler.util.javabean.geodata.Task;
+import idv.ray.geocrawler.util.javabean.httpbody.HttpBody;
 
 @Configuration
 public class CrawlerServiceImpl implements CrawlerService {
@@ -90,26 +90,26 @@ public class CrawlerServiceImpl implements CrawlerService {
 
 	@PostConstruct
 	public void init() {
-		geoTypeAlternater = new GeoTypeAlternater(new CircularList<String>(seedMap.keySet()));
-		
-		//initital task and resource table
-		if (!tDao.isInitialized()) {
-			System.out.println("initializing crawler service...");
-			// init table
-			rDao.init(tableSchemaMap.get("resource"));
-			tDao.init(tableSchemaMap.get("task"));
-
-			// init seed
-			for (String geoType : seedMap.keySet()) {
-				List<String> seeds = seedMap.get(geoType);
-				for (String seed : seeds) {
-					Task task = new Task(seed, 0, geoType, 0);// level=0
-					tDao.insert(task);
-				}
-			}
-		} else {
-			System.out.println("cralwer service already initialized");
-		}
+//		geoTypeAlternater = new GeoTypeAlternater(new CircularList<String>(seedMap.keySet()));
+//		
+//		//initital task and resource table
+//		if (!tDao.isInitialized()) {
+//			System.out.println("initializing crawler service...");
+//			// init table
+//			rDao.init(tableSchemaMap.get("resource"));
+//			tDao.init(tableSchemaMap.get("task"));
+//
+//			// init seed
+//			for (String geoType : seedMap.keySet()) {
+//				List<String> seeds = seedMap.get(geoType);
+//				for (String seed : seeds) {
+//					Task task = new Task(seed, 0, geoType, 0);// level=0
+//					tDao.insert(task);
+//				}
+//			}
+//		} else {
+//			System.out.println("cralwer service already initialized");
+//		}
 	}
 
 	public Task getNextTask() {

@@ -13,11 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
-import idv.ray.geocrawler.javabean.geodata.Task;
-import idv.ray.geocrawler.javabean.httpbody.HttpBody;
-import idv.ray.geocrawler.javabean.json.GeoDataSerializer;
-import idv.ray.geocrawler.javabean.json.HttpBodySerializer;
 import idv.ray.geocrawler.master.crawler.service.CrawlerService;
+import idv.ray.geocrawler.util.javabean.geodata.Task;
+import idv.ray.geocrawler.util.javabean.httpbody.HttpBody;
+import idv.ray.geocrawler.util.jsonserializer.JSONSerializer;
 
 @Controller
 public class TaskController {
@@ -34,7 +33,7 @@ public class TaskController {
 			return "wrong geotype!!";
 
 		// parse request string to HttpBody object
-		HttpBody httpBody = new HttpBodySerializer().deserialize(reqString, HttpBody.class);
+		HttpBody httpBody = new JSONSerializer<HttpBody>().deserialize(reqString, HttpBody.class);
 		crawlerService.post(geoType, httpBody);
 
 		// return a different geotype task
@@ -45,7 +44,7 @@ public class TaskController {
 			System.out.println("finished!!");
 		}
 		System.out.println("//////////////");
-		return new GeoDataSerializer().serialize(t);
+		return new JSONSerializer<Task>().serialize(t);
 
 	}
 
