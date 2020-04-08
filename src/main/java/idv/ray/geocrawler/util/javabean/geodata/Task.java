@@ -1,8 +1,14 @@
-package idv.ray.geocrawler.util.geodata;
+package idv.ray.geocrawler.util.javabean.geodata;
+
+import javax.persistence.Entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 public class Task extends GeoData {
+	
+	public static final String TYPE_NAME="task";
+	
 	@JsonProperty("running")
 	boolean running;
 

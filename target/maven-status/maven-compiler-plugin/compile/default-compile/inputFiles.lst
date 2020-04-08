@@ -1,9 +1,6 @@
-C:\Users\Ray\eclipse-workspace\geocrawler-javabean\src\main\java\idv\ray\geocrawler\javabean\geodata\Task.java
-C:\Users\Ray\eclipse-workspace\geocrawler-javabean\src\main\java\idv\ray\geocrawler\javabean\circularlist\CircularList.java
-C:\Users\Ray\eclipse-workspace\geocrawler-javabean\src\main\java\idv\ray\geocrawler\javabean\json\GeoDataSerializer.java
-C:\Users\Ray\eclipse-workspace\geocrawler-javabean\src\main\java\idv\ray\geocrawler\javabean\json\JSONDeserializable.java
-C:\Users\Ray\eclipse-workspace\geocrawler-javabean\src\main\java\idv\ray\geocrawler\javabean\geodata\Resource.java
-C:\Users\Ray\eclipse-workspace\geocrawler-javabean\src\main\java\idv\ray\geocrawler\javabean\geodata\GeoData.java
-C:\Users\Ray\eclipse-workspace\geocrawler-javabean\src\main\java\idv\ray\geocrawler\javabean\json\HttpBodySerializer.java
-C:\Users\Ray\eclipse-workspace\geocrawler-javabean\src\main\java\idv\ray\geocrawler\javabean\httpbody\HttpBody.java
-C:\Users\Ray\eclipse-workspace\geocrawler-javabean\src\main\java\idv\ray\geocrawler\javabean\json\JSONSerializable.java
+C:\Users\Ray\eclipse-workspace\geocrawler-util\src\main\java\idv\ray\geocrawler\util\javabean\geodata\Resource.java
+C:\Users\Ray\eclipse-workspace\geocrawler-util\src\main\java\idv\ray\geocrawler\util\javabean\httpbody\HttpBody.java
+C:\Users\Ray\eclipse-workspace\geocrawler-util\src\main\java\idv\ray\geocrawler\util\javabean\geodata\GeoData.java
+C:\Users\Ray\eclipse-workspace\geocrawler-util\src\main\java\idv\ray\geocrawler\util\javabean\geodata\Task.java
+C:\Users\Ray\eclipse-workspace\geocrawler-util\src\main\java\idv\ray\geocrawler\util\circularlist\CircularList.java
+C:\Users\Ray\eclipse-workspace\geocrawler-util\src\main\java\idv\ray\geocrawler\util\jsonserializer\JSONSerializer.java

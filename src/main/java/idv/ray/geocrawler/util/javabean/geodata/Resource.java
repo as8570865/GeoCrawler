@@ -1,6 +1,11 @@
-package idv.ray.geocrawler.util.geodata;
+package idv.ray.geocrawler.util.javabean.geodata;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Resource extends GeoData {
+	
+	public static final String TYPE_NAME="resource";
 
 	public Resource() {
 		super();
