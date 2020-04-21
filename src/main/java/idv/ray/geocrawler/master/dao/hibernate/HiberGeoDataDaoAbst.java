@@ -1,12 +1,12 @@
-package idv.ray.geocrawler.master.hiberdao;
+package idv.ray.geocrawler.master.dao.hibernate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import idv.ray.geocrawler.master.dao.GeoDataDao;
 import idv.ray.geocrawler.util.javabean.geodata.GeoData;
 
 public abstract class HiberGeoDataDaoAbst<T extends GeoData> implements GeoDataDao<T> {
@@ -17,7 +17,7 @@ public abstract class HiberGeoDataDaoAbst<T extends GeoData> implements GeoDataD
 	private SessionFactory sessionFactory;
 
 	public void setClazz(Class<T> clazz) {
-		this.clazz = clazz;
+		this.clazz=clazz;
 	}
 
 	public T get(int id) {
@@ -25,11 +25,8 @@ public abstract class HiberGeoDataDaoAbst<T extends GeoData> implements GeoDataD
 	}
 
 	public List getAll() {
-		System.out.println("do getAll...");
-		ArrayList a=new ArrayList();
-		a.get(5);
-		return null;
-		//return getCurrentSession().createQuery("from " + clazz.getName()).list();
+
+		return getCurrentSession().createQuery("from " + clazz.getName()).list();
 	}
 
 	public T insert(T geoData) {
@@ -47,7 +44,6 @@ public abstract class HiberGeoDataDaoAbst<T extends GeoData> implements GeoDataD
 	}
 
 	public boolean isInitialized() {
-		System.out.println("do isInitialized...");
 		return false;
 	}
 

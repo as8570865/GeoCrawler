@@ -14,4 +14,5 @@ public interface CrawlerService {
 	public void post(String geoType, HttpBody reqBody);
 
 	public Set<String> getGeoTypeSet();
+	
 }

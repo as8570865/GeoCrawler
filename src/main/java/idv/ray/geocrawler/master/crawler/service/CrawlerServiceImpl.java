@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Service;
 
 import idv.ray.geocrawler.master.dao.ResourceDao;
 import idv.ray.geocrawler.master.dao.TaskDao;
@@ -18,7 +18,8 @@ import idv.ray.geocrawler.util.javabean.geodata.Resource;
 import idv.ray.geocrawler.util.javabean.geodata.Task;
 import idv.ray.geocrawler.util.javabean.httpbody.HttpBody;
 
-@Configuration
+@Service
+@Transactional
 public class CrawlerServiceImpl implements CrawlerService {
 
 	private class GeoTypeAlternater {
@@ -27,7 +28,7 @@ public class CrawlerServiceImpl implements CrawlerService {
 		private CircularList<String> geoTypeCirList;
 		private int iteratingTimes = 0;
 
-		GeoTypeAlternater(CircularList<String> geoTypeCirList) {
+		private GeoTypeAlternater(CircularList<String> geoTypeCirList) {
 			this.geoTypeCirList = geoTypeCirList;
 		}
 
@@ -42,7 +43,7 @@ public class CrawlerServiceImpl implements CrawlerService {
 
 		}
 
-	}	
+	}
 
 	@Autowired
 	private TaskDao tDao;
@@ -50,20 +51,17 @@ public class CrawlerServiceImpl implements CrawlerService {
 	private ResourceDao rDao;
 
 	@Autowired
-	@Qualifier("tableSchemaMap")
-	private Map<String, String> tableSchemaMap;
-	
-	@Autowired
 	@Qualifier("seedMap")
 	private Map<String, List<String>> seedMap;
-	
+
 	private GeoTypeAlternater geoTypeAlternater;
 
 	private Task srcTask;
-
-	@Bean
-	public CrawlerServiceImpl crawlerService() {
-		return new CrawlerServiceImpl();
+	
+	//initialize the geoTypeAlternater
+	@PostConstruct
+	public void postConst() {
+		geoTypeAlternater=new GeoTypeAlternater(new CircularList<String>(seedMap.keySet()));
 	}
 
 	private void insertUrlkSet(Set<String> urlSet) {
@@ -88,44 +86,36 @@ public class CrawlerServiceImpl implements CrawlerService {
 		}
 	}
 
-	@PostConstruct
 	public void init() {
-//		geoTypeAlternater = new GeoTypeAlternater(new CircularList<String>(seedMap.keySet()));
-//		
-//		//initital task and resource table
-//		if (!tDao.isInitialized()) {
-//			System.out.println("initializing crawler service...");
-//			// init table
-//			rDao.init(tableSchemaMap.get("resource"));
-//			tDao.init(tableSchemaMap.get("task"));
-//
-//			// init seed
-//			for (String geoType : seedMap.keySet()) {
-//				List<String> seeds = seedMap.get(geoType);
-//				for (String seed : seeds) {
-//					Task task = new Task(seed, 0, geoType, 0);// level=0
-//					tDao.insert(task);
-//				}
-//			}
-//		} else {
-//			System.out.println("cralwer service already initialized");
-//		}
+
+		if (tDao.tableIsEmpty()) {
+			for (String geoType : seedMap.keySet()) {
+				List<String> seeds = seedMap.get(geoType);
+				for (String seed : seeds) {
+					Task task = new Task(seed, 0, geoType, 0);// level=0
+					tDao.insert(task);
+				}
+			}
+		}else {
+			throw new RuntimeException("crawler service was already initialized");
+		}
+
 	}
 
 	public Task getNextTask() {
 
 		String geoType = geoTypeAlternater.next();
 
-		Task returnTask = tDao.getNextNullStatus(geoType);
+		Task returnTask = tDao.getReady(geoType);
 		if (returnTask.isValid()) {
 			// set task running
-			returnTask.setRunning(true);
+			returnTask.setStatus(Task.Status.RUNNING);
 			tDao.update(returnTask);
 			System.out.println("get next task with null status");
 		} else {
 			// call get next running task if there is no null status task
 			System.out.println("get next task with running status");
-			returnTask = tDao.getNextRunningStatus(geoType);
+			returnTask = tDao.getRunning(geoType);
 		}
 
 		return returnTask;
@@ -139,7 +129,7 @@ public class CrawlerServiceImpl implements CrawlerService {
 			setSrcTask(st);
 
 			// set previous task finished
-			srcTask.setRunning(false);
+			srcTask.setStatus(Task.Status.FINISHED);
 			tDao.update(srcTask);
 
 			if (!reqBody.isResource()) {
@@ -160,8 +150,9 @@ public class CrawlerServiceImpl implements CrawlerService {
 	private void setSrcTask(Task prevTask) {
 		this.srcTask = prevTask;
 	}
-	
-	public Set<String> getGeoTypeSet(){
+
+	public Set<String> getGeoTypeSet() {
 		return seedMap.keySet();
 	}
+
 }

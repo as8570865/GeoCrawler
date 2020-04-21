@@ -6,7 +6,7 @@ import idv.ray.geocrawler.util.javabean.geodata.GeoData;
 
 public interface GeoDataService<T extends GeoData> {
 	
-	public List getAll();
+	public List getAll(int a);
 
 	public T getById(int id);
 

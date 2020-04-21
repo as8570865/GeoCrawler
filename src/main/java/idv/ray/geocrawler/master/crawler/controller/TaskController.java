@@ -48,9 +48,21 @@ public class TaskController {
 
 	}
 
-//	@RequestMapping(value = "/test", produces = "application/json")
-//	public void test() {
-//		System.out.println(crawlerService.isInitialized());
-//	}
+	@RequestMapping(value = "/init", produces = "application/json")
+	public @ResponseBody String init() {
+		try {
+			crawlerService.init();
+			return "successfully intialized";
+		} catch (RuntimeException e) {
+			return e.getMessage();
+		}
+
+	}
+
+	@RequestMapping(value = "/test/{geoType}", produces = "application/json")
+	public void test(@PathVariable("geoType") String geoType) {
+		Task t = crawlerService.getNextTask();
+		System.out.println(t);
+	}
 
 }

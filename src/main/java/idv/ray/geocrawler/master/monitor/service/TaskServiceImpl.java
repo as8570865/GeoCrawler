@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
-import idv.ray.geocrawler.master.hiberdao.TaskDao;
+import idv.ray.geocrawler.master.dao.TaskDao;
 import idv.ray.geocrawler.util.javabean.geodata.Task;
 
 @Configuration
@@ -24,10 +24,12 @@ public class TaskServiceImpl implements TaskService {
 
 	}
 
-	public List getAll() {
-		taskDao.isInitialized();
-		taskDao.getAll();
-
+	public List getAll(int a) {
+		Task t=taskDao.getRunning("sos");
+		System.out.println(t);
+		t.setStatus(Task.Status.FINISHED);
+		taskDao.update(t);
+		
 		return null;
 	}
 

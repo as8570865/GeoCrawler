@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 
-import idv.ray.geocrawler.master.hiberdao.ResourceDao;
+import idv.ray.geocrawler.master.dao.ResourceDao;
 import idv.ray.geocrawler.util.geostandard.GeoStandard;
 import idv.ray.geocrawler.util.javabean.geodata.Resource;
 
@@ -43,6 +43,11 @@ public class ResourceServiceImpl implements ResourceService {
 		if (gs.isGeoResource(capabilitiesUrl) && !resourceDao.containsLink(resource.getLink()))
 			resourceDao.insert(resource);
 
+	}
+
+	public List getAll(int a) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

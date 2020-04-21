@@ -14,13 +14,13 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 	<context:component-scan
 		base-package="idv.ray.geocrawler.master.dao" />
 	<context:component-scan
-		base-package="idv.ray.geocrawler.master.hiberdao" />
-	<context:component-scan
 		base-package="idv.ray.geocrawler.master.crawler.service" />
 	<context:component-scan
 		base-package="idv.ray.geocrawler.master.monitor.service" />
 	<context:component-scan
 		base-package="idv.ray.geocrawler.master.monitor.controller" />
+	<context:component-scan
+		base-package="idv.ray.geocrawler.master.test" />
 	<context:component-scan
 		base-package="idv.ray.geocrawler.util.geostandard" />
 

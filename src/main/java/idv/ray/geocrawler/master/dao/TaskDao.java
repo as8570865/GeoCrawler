@@ -1,20 +1,14 @@
 package idv.ray.geocrawler.master.dao;
 
-import javax.sql.DataSource;
-
 import idv.ray.geocrawler.util.javabean.geodata.Task;
 
-public abstract class TaskDao extends GeoDataDaoAbst<Task> {
+public interface TaskDao extends GeoDataDao<Task> {
 
-	public TaskDao(DataSource ds) {
-		super(ds);
-		// TODO Auto-generated constructor stub
-	}
+	public void update(Task task);
 
-	abstract public void update(Task task);
+	public Task getReady(String geoType);
 
-	abstract public Task getNextNullStatus(String geoType);
+	public Task getRunning(String geoType);
 	
-	abstract public Task getNextRunningStatus(String geoType);
-
+	public boolean tableIsEmpty();
 }
