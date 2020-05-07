@@ -1,10 +1,10 @@
 package idv.ray.geocrawler.worker.core;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,23 +12,19 @@ import org.jsoup.nodes.Element;
 import org.jsoup.parser.ParseSettings;
 import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import idv.ray.geocrawler.javabean.geodata.Task;
+import idv.ray.geocrawler.util.javabean.geodata.Task;
 
 public class Crawler {
-	private static Pattern patternDomainName;
-	private Matcher matcher;
-	public static final String USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
-	private static final String DOMAIN_NAME_PATTERN = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)";
 
-	static {
-		patternDomainName = Pattern.compile(DOMAIN_NAME_PATTERN);
-	}
+	public static final String USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
 
 	private int maxPageNum;
 
+	@Autowired
 	private UrlFilter urlFilter;
 
 	public Crawler(int maxPageNum) {
@@ -37,21 +33,9 @@ public class Crawler {
 		// System.out.println("not ok formats are: " + notOkUrlFormatSet);
 	}
 
-	// check url pattern
-	private String getDomainName(String url) {
+	private List<String> crawlByKeyword(String keyword) {
 
-		String domainName = "";
-		matcher = patternDomainName.matcher(url);
-		if (matcher.find()) {
-			domainName = matcher.group(0).trim().split("&")[0].split("%")[0].split("\\?")[0];
-		}
-		return domainName;
-
-	}
-
-	private Set<String> crawlByKeyword(String keyword) {
-
-		Set<String> result = new HashSet<String>();
+		List<String> result = new ArrayList<String>();
 		for (int i = 1; i <= maxPageNum; i++) {
 			String request = "https://www.google.com/search?q=" + keyword + "&start=" + i;
 			System.out.println("Sending request..." + request);
@@ -68,7 +52,7 @@ public class Crawler {
 					String temp = link.attr("href");
 					if (temp.startsWith("/url?q=")) {
 						// use regex to get domain name
-						String urlString = getDomainName(temp);
+						String urlString = urlFilter.getDomainName(temp);
 						if (!result.contains(urlString)) {
 							if (urlFilter.isCorrectFormat(urlString)) {
 								System.out.println("get this url: " + urlString);
@@ -86,9 +70,9 @@ public class Crawler {
 		return result;
 	}
 
-	private Set<String> crawlByUrl(String request) {
+	private List<String> crawlByUrl(String request) {
 
-		Set<String> result = new HashSet<String>();
+		List<String> result = new ArrayList<String>();
 
 		System.out.println("Sending request..." + request);
 
@@ -105,7 +89,7 @@ public class Crawler {
 			for (Element link : links) {
 
 				// get attribute href and convert to specific format
-				String urlString = getDomainName(link.attr("href"));
+				String urlString = urlFilter.getDomainName(link.attr("href"));
 				if (!result.contains(urlString)) {
 					if (urlFilter.isCorrectFormat(urlString)) {
 						result.add(urlString);
@@ -123,7 +107,7 @@ public class Crawler {
 		return result;
 	}
 
-	public Set<String> crawl(Task srcTask) {
+	public List<String> crawl(Task srcTask) {
 
 		if (srcTask.getLevel() == 0) {
 			System.out.println("crawling by keyword...");
@@ -157,7 +141,6 @@ public class Crawler {
 //		}
 
 		UrlFilter urlFilter = (UrlFilter) context.getBean("urlFilter");
-		System.out.println(urlFilter.isCorrectFormat("123"));
 
 //		Set<String> s = (Set<String>) context.getBean("unacceptableUrlFormatSet");
 //		System.out.println(s);

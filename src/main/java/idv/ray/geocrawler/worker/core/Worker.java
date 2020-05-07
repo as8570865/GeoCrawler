@@ -2,19 +2,21 @@ package idv.ray.geocrawler.worker.core;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import idv.ray.geocrawler.javabean.geodata.Task;
-import idv.ray.geocrawler.javabean.httpbody.HttpBody;
-import idv.ray.geocrawler.worker.geostandard.GeoStandard;
-import idv.ray.geocrawler.worker.geostandard.SOS;
-import idv.ray.geocrawler.worker.geostandard.WFS;
-import idv.ray.geocrawler.worker.geostandard.WMS;
-import idv.ray.geocrawler.worker.geostandard.WMTS;
+import idv.ray.geocrawler.util.geostandard.GeoStandard;
+import idv.ray.geocrawler.util.geostandard.RequestBasedGeoStandard;
+import idv.ray.geocrawler.util.geostandard.SOS;
+import idv.ray.geocrawler.util.geostandard.WFS;
+import idv.ray.geocrawler.util.geostandard.WMS;
+import idv.ray.geocrawler.util.geostandard.WMTS;
+import idv.ray.geocrawler.util.javabean.geodata.Task;
+import idv.ray.geocrawler.util.javabean.httpbody.CrawlerHttpBody;
+
 
 public class Worker {
 
@@ -41,27 +43,27 @@ public class Worker {
 		String startGeoType = (String) context.getBean("startGeoType");
 
 		// first get-task from master
-		Task srcTask = MasterConnector.getTask(new HttpBody(new Task()), startGeoType);
+		Task srcTask = MasterConnector.getTask(new CrawlerHttpBody(new Task()), startGeoType);
 
 		while (true) {
 
 			String geoType = srcTask.getGeoType();
-			GeoStandard geoStandard = geoStandardMap.get(geoType);
+			RequestBasedGeoStandard geoStandard = (RequestBasedGeoStandard)geoStandardMap.get(geoType);
 
 			// create a httpBody with source task
-			HttpBody httpBody = new HttpBody(srcTask);
+			CrawlerHttpBody httpBody = new CrawlerHttpBody(srcTask);
 
 			// check if task is a geo-resource
-			// if it's georesource
-			if (geoStandard.isGeoResource(srcTask.getLink())) {
+			if (geoStandard.isGeoResource(geoStandard.getCapabilitiesUrl(srcTask.getLink()))) {
+				// if it's georesource
 				System.out.println("this task is a georesource........");
 				httpBody.setResource(true);
 				// it's not georesource
 			} else {
 				System.out.println("this task is \"not\" a geo-resource........");
 				Crawler crawler = (Crawler) context.getBean("crawler");
-				Set<String> urlSet = crawler.crawl(srcTask);
-				httpBody.setUrlSet(urlSet);
+				List<String> urlList = crawler.crawl(srcTask);
+				httpBody.setUrlList(urlList);
 			}
 			srcTask = MasterConnector.getTask(httpBody, geoType);
 			if (srcTask.getLevel() > this.maxLevel) {

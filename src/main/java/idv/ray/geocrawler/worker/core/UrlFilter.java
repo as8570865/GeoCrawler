@@ -5,6 +5,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -15,17 +20,35 @@ import org.springframework.context.annotation.Configuration;
 public class UrlFilter {
 
 	@Autowired
+	@Resource(name = "unacceptableGeoKeywordSet")
 	private Set<String> unacceptableGeoKeywordSet;
 	@Autowired
+	@Resource(name = "unacceptableUrlFormatSet")
 	private Set<String> unacceptableUrlFormatSet;
+
+	@Autowired
+	@Qualifier("domainNamePatternString")
+	private String domainNamePatternString;
+	private Pattern patternDomainName;
 
 	@Bean
 	public UrlFilter urlFilter() {
 		return new UrlFilter();
 	}
 
-	public UrlFilter() {
-		System.out.println("in the urlfilter constructor...");
+	@PostConstruct
+	public void init() {
+		patternDomainName = Pattern.compile(domainNamePatternString);
+	}
+
+	// make the url match specific pattern
+	public String getDomainName(String url) {
+		String domainName = "";
+		Matcher matcher = patternDomainName.matcher(url);
+		if (matcher.find()) {
+			domainName = matcher.group(0).trim().split("&")[0].split("%")[0].split("\\?")[0];
+		}
+		return domainName;
 	}
 
 	// check url file format (eg. not pdf. or others...)

@@ -20,8 +20,8 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 
 	<!-- crawler bean -->
 	<bean id="crawler" class="idv.ray.geocrawler.worker.core.Crawler">
-		<constructor-arg value="3" /><!-- set the number 
-			of google search page -->
+		<constructor-arg value="3" /><!-- set the number of google 
+			search page -->
 	</bean>
 
 	<!-- notOkUrlFormatSet bean -->
@@ -41,5 +41,10 @@ http://www.springframework.org/schema/util/spring-util-2.5.xsd">
 		<value>stackoverflow</value>
 		<value>ithelp</value>
 	</util:set>
+
+	<!-- domain name pattern -->
+	<bean id="domainNamePatternString" class="java.lang.String">
+		<constructor-arg value= "https?:\/\/(www\\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&amp;//=]*)" />
+	</bean>
 
 </beans>
