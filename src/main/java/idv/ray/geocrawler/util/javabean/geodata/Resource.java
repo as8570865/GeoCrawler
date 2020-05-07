@@ -22,8 +22,8 @@ public class Resource extends GeoData {
 
 	@Override
 	public String toString() {
-		return "Resource [id=" + id + ", level=" + level + ", link=" + link +", geoType=" + geoType+ "]";
+		return "Resource [id=" + id + ", level=" + level + ", link=" + link + ", time=" + time + ", geoType=" + geoType
+				+ ", srcTaskId=" + srcTaskId + "]";
 	}
-
 
 }

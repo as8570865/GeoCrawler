@@ -1,16 +1,25 @@
 package idv.ray.geocrawler.util.javabean.geodata;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
+@Entity
 public class Task extends GeoData {
-	
-	public static final String TYPE_NAME="task";
-	
-	@JsonProperty("running")
-	boolean running;
+
+	public static final String TYPE_NAME = "task";
+
+	public enum Status {
+		READY, RUNNING, FINISHED
+	}
+
+	@JsonProperty("status")
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Status status = Status.READY;
 
 	public Task() {
 		super();
@@ -27,16 +36,21 @@ public class Task extends GeoData {
 
 	@Override
 	public String toString() {
-		return "Task [running=" + running + ", id=" + id + ", level=" + level + ", link=" + link + ", geoType="
-				+ geoType + "]";
+		return "Task [status=" + status + ", id=" + id + ", level=" + level + ", link=" + link + ", time=" + time
+				+ ", geoType=" + geoType + ", srcTaskId=" + srcTaskId + "]";
 	}
 
-	public boolean isRunning() {
-		return running;
+	public Status getStatus() {
+		return this.status;
 	}
 
-	public void setRunning(boolean running) {
-		this.running = running;
+	public void setRunning() {
+		this.status = Status.RUNNING;
+	}
+
+	public void setFinished(String processorIp) {
+		this.processorIp = processorIp;
+		this.status = Status.FINISHED;
 	}
 
 }

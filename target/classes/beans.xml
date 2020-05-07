@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/util 
+   		   http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- seeds map -->
+	<util:map id="geoStandardMap" map-class="java.util.HashMap"
+		key-type="java.lang.String" value-type="idv.ray.geocrawler.util.geostandard.GeoStandard">
+		<entry key="sos" value-ref="sos" />
+		<entry key="wms" value-ref="wms" />
+		<entry key="wfs" value-ref="wfs" />
+		<entry key="wmts" value-ref="wmts" />
+	</util:map>
+
+</beans>
