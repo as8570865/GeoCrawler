@@ -9,9 +9,7 @@
    		   http://www.springframework.org/schema/util/spring-util.xsd">
 
 	<util:list id="sosList" value-type="java.lang.String">
-		<!-- <value>sos service</value>
-		<value>sos server</value>
-		<value>sos web</value> -->
+		<!-- <value>sos service</value> <value>sos server</value> <value>sos web</value> -->
 		<value>sos uk air</value>
 		<value>ogc sos service</value>
 		<value>ogc sos server</value>
@@ -29,31 +27,31 @@
 		<value>wts server</value>
 		<value>wts web</value>
 	</util:list>
-	
+
 	<util:list id="wcsList" value-type="java.lang.String">
 		<value>wcs service</value>
 		<value>wcs server</value>
 		<value>wcs web</value>
 	</util:list>
-	
+
 	<util:list id="wfsList" value-type="java.lang.String">
 		<value>wfs service</value>
 		<value>wfs server</value>
 		<value>wfs web</value>
 	</util:list>
-	
+
 	<util:list id="wmtsList" value-type="java.lang.String">
 		<value>wmts service</value>
 		<value>wmts server</value>
 		<value>wmts web</value>
 	</util:list>
-	
+
 	<util:list id="wpsList" value-type="java.lang.String">
 		<value>wps service</value>
 		<value>wps server</value>
 		<value>wps web</value>
 	</util:list>
-	
+
 	<util:list id="test5" value-type="java.lang.String">
 		<value>test5 service</value>
 		<value>test5 server</value>

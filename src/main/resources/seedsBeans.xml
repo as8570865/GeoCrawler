@@ -15,7 +15,7 @@
 		<value>wms server</value>
 		<value>wms capabilities</value>
 	</util:list>
-	
+
 	<util:list id="sosList" value-type="java.lang.String">
 		<value>sos gua getcapabilities</value>
 		<value>sos server getcapability</value>
@@ -27,30 +27,39 @@
 		<value>wts server</value>
 		<value>wts capabilities</value>
 	</util:list>
-	
+
 	<util:list id="wcsList" value-type="java.lang.String">
 		<value>wcs service</value>
 		<value>wcs server</value>
 		<value>wcs capabilities</value>
 	</util:list>
-	
+
 	<util:list id="wfsList" value-type="java.lang.String">
 		<value>wfs service</value>
 		<value>wfs server</value>
 		<value>wfs capabilities</value>
 	</util:list>
-	
+
 	<util:list id="wmtsList" value-type="java.lang.String">
 		<value>wmts service</value>
 		<value>wmts server</value>
 		<value>wmts capabilities</value>
 	</util:list>
-	
+
 	<util:list id="wpsList" value-type="java.lang.String">
 		<value>wps service</value>
 		<value>wps server</value>
 		<value>wps capabilities</value>
 	</util:list>
 	
+	<!-- seeds map -->
+	<util:map id="seedMap" map-class="java.util.HashMap"
+		key-type="java.lang.String" value-type="java.lang.String">
+		<entry key="sos" value-ref="sosList" />
+		<entry key="wms" value-ref="wmsList" />
+		<entry key="wfs" value-ref="wfsList" />
+		<entry key="wmts" value-ref="wmtsList" />
+	</util:map>
+
 
 </beans>

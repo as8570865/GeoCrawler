@@ -2,6 +2,7 @@ package idv.ray.geocrawler.master.crawler.service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
@@ -11,12 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import idv.ray.geocrawler.exception.GeoCrawlerException;
+import idv.ray.geocrawler.exception.GeoCrawlerException.FailToInitializeException;
 import idv.ray.geocrawler.master.dao.ResourceDao;
 import idv.ray.geocrawler.master.dao.TaskDao;
+import idv.ray.geocrawler.master.dao.WorkerDao;
 import idv.ray.geocrawler.util.circularlist.CircularList;
 import idv.ray.geocrawler.util.javabean.geodata.Resource;
 import idv.ray.geocrawler.util.javabean.geodata.Task;
-import idv.ray.geocrawler.util.javabean.httpbody.HttpBody;
+import idv.ray.geocrawler.util.javabean.httpbody.CrawlerHttpBody;
+import idv.ray.geocrawler.util.javabean.worker.Worker;
 
 @Service
 @Transactional
@@ -46,9 +51,11 @@ public class CrawlerServiceImpl implements CrawlerService {
 	}
 
 	@Autowired
-	private TaskDao tDao;
+	private TaskDao taskDao;
 	@Autowired
-	private ResourceDao rDao;
+	private ResourceDao resourceDao;
+	@Autowired
+	private WorkerDao workerDao;
 
 	@Autowired
 	@Qualifier("seedMap")
@@ -57,18 +64,19 @@ public class CrawlerServiceImpl implements CrawlerService {
 	private GeoTypeAlternater geoTypeAlternater;
 
 	private Task srcTask;
-	
-	//initialize the geoTypeAlternater
+
+	// initialize the geoTypeAlternater
 	@PostConstruct
 	public void postConst() {
-		geoTypeAlternater=new GeoTypeAlternater(new CircularList<String>(seedMap.keySet()));
+		geoTypeAlternater = new GeoTypeAlternater(new CircularList<String>(seedMap.keySet()));
 	}
 
-	private void insertUrlkSet(Set<String> urlSet) {
-		for (String url : urlSet) {
-			if (!tDao.containsLink(url)) {
-
-				tDao.insert(new Task(url, srcTask.getLevel() + 1, srcTask.getGeoType(), srcTask.getId()));
+	private void insertUrlkList(List<String> urlList) {
+		for (String url : urlList) {
+			Task t = new Task(url, srcTask.getLevel() + 1, srcTask.getGeoType(), srcTask.getId());
+			t.setTime(java.time.LocalDateTime.now());
+			if (!taskDao.contains(t)) {
+				taskDao.insert(t);
 				System.out.println("inserting url: " + url);
 			} else {
 				System.out.println("url: " + url + " already exists");
@@ -78,79 +86,87 @@ public class CrawlerServiceImpl implements CrawlerService {
 
 	private void insertResource() {
 		Resource r = new Resource(srcTask.getLink(), srcTask.getLevel(), srcTask.getGeoType(), srcTask.getId());
-		if (!rDao.containsLink(r.getLink())) {
-			rDao.insert(r);
+		r.setWorker(srcTask.getWorker());
+		r.setTime(java.time.LocalDateTime.now());
+		if (!resourceDao.contains(r)) {
+			resourceDao.insert(r);
 			System.out.println("inserting resource: " + r.toString());
 		} else {
 			System.out.println("resource: " + r.toString() + " already exists");
 		}
 	}
 
-	public void init() {
+	@Override
+	public void init() throws FailToInitializeException {
 
-		if (tDao.tableIsEmpty()) {
+		if (taskDao.tableIsEmpty()) {
 			for (String geoType : seedMap.keySet()) {
 				List<String> seeds = seedMap.get(geoType);
 				for (String seed : seeds) {
 					Task task = new Task(seed, 0, geoType, 0);// level=0
-					tDao.insert(task);
+					taskDao.insert(task);
 				}
 			}
-		}else {
-			throw new RuntimeException("crawler service was already initialized");
+		} else {
+			throw new GeoCrawlerException.FailToInitializeException("crawler service was already initialized");
 		}
 
 	}
 
-	public Task getNextTask() {
+	@Override
+	public Optional<Task> getNextTask() {
 
 		String geoType = geoTypeAlternater.next();
 
-		Task returnTask = tDao.getReady(geoType);
-		if (returnTask.isValid()) {
+		Optional<Task> optTask = taskDao.getReady(geoType);
+		if (optTask.isPresent()) {
+			Task t = optTask.get();
 			// set task running
-			returnTask.setStatus(Task.Status.RUNNING);
-			tDao.update(returnTask);
-			System.out.println("get next task with null status");
+			t.setRunning();
+			taskDao.update(t);
+			System.out.println("get next ready task");
 		} else {
-			// call get next running task if there is no null status task
-			System.out.println("get next task with running status");
-			returnTask = tDao.getRunning(geoType);
+
+			System.out.println("get next running task");
+			optTask = taskDao.getRunning(geoType);
+
 		}
 
-		return returnTask;
+		return optTask;
 
 	}
 
-	public void post(String geoType, HttpBody reqBody) {
+	@Override
+	public void post(String geoType, CrawlerHttpBody reqBody) {
 
-		Task st = reqBody.getSrcTask();
-		if (st.isValid()) {
-			setSrcTask(st);
+		setSrcTask(reqBody.getSrcTask());
 
-			// set previous task finished
-			srcTask.setStatus(Task.Status.FINISHED);
-			tDao.update(srcTask);
+		// set previous task finished
+		Worker processingWorker=reqBody.getSrcTask().getWorker();
+		srcTask.setFinished(processingWorker);
+		taskDao.update(srcTask);
+		//set the crawling time for the worker
+		processingWorker.setLastCrawlingTime(java.time.LocalDateTime.now());
+		workerDao.update(processingWorker);
 
-			if (!reqBody.isResource()) {
-				Set<String> urlSet = reqBody.getUrlSet();
-				if (!urlSet.isEmpty()) {
-					insertUrlkSet(urlSet);
-				} else {
-					System.out.println("empty url set, not posting any task");
-				}
+		if (!reqBody.isResource()) {
+			List<String> urlList = reqBody.getUrlList();
+			if (!urlList.isEmpty()) {
+				insertUrlkList(urlList);
 			} else {
-				insertResource();
+				System.out.println("empty url set, not posting any task");
 			}
 		} else {
-			System.out.println("invalid source task, no posting");
+			insertResource();
 		}
+
 	}
 
-	private void setSrcTask(Task prevTask) {
-		this.srcTask = prevTask;
+	private void setSrcTask(Task t) {
+		this.srcTask = t;
 	}
 
+	@Override
 	public Set<String> getGeoTypeSet() {
 		return seedMap.keySet();
 	}

@@ -19,6 +19,7 @@
 				<value>idv.ray.geocrawler.util.javabean.geodata.GeoData</value>
 				<value>idv.ray.geocrawler.util.javabean.geodata.Resource</value>
 				<value>idv.ray.geocrawler.util.javabean.geodata.Task</value>
+				<value>idv.ray.geocrawler.util.javabean.worker.Worker</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

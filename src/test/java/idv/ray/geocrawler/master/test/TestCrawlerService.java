@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import idv.ray.geocrawler.master.dao.ResourceDao;
 import idv.ray.geocrawler.master.dao.TaskDao;
-import idv.ray.geocrawler.util.javabean.geodata.Task;
 
 @Service
 public class TestCrawlerService  {
@@ -16,7 +15,7 @@ public class TestCrawlerService  {
 	private ResourceDao rDao;
 
 	public void test(String geoType) {
-		Task t=tDao.getReady(geoType);
-		System.out.println(t);
+//		Task t=tDao.getReady(geoType);
+//		System.out.println(t);
 	}
 }

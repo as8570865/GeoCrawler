@@ -1,9 +1,8 @@
 package idv.ray.geocrawler.master.dao.hibernate;
 
-import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import idv.ray.geocrawler.master.dao.GeoDataDao;
@@ -17,38 +16,42 @@ public abstract class HiberGeoDataDaoAbst<T extends GeoData> implements GeoDataD
 	private SessionFactory sessionFactory;
 
 	public void setClazz(Class<T> clazz) {
-		this.clazz=clazz;
+		this.clazz = clazz;
 	}
 
-	public T get(int id) {
-		return (T) getCurrentSession().get(clazz, id);
+	@Override
+	public T getById(int id) {
+		return getCurrentSession().get(clazz, id);
 	}
 
-	public List getAll() {
-
-		return getCurrentSession().createQuery("from " + clazz.getName()).list();
-	}
-
+	@Override
 	public T insert(T geoData) {
 		getCurrentSession().save(geoData);
 		return geoData;
 	}
 
+	@Override
 	public void delete(int id) {
-		T entity = get(id);
+		T entity = getById(id);
 		getCurrentSession().delete(entity);
 	}
 
+	@Override
 	public void init(String tableSchema) {
-		
+
 	}
 
+	@Override
 	public boolean isInitialized() {
 		return false;
 	}
 
-	public boolean containsLink(String link) {
-		return false;
+	@Override
+	public boolean contains(GeoData geoData) {
+		Session session = getCurrentSession();
+		Query query = session.createQuery("select 1 from "+geoData.getClass().getName()+" g where g.link =:link");
+		query.setString("link", geoData.getLink());
+		return (query.uniqueResult() != null);
 	}
 
 	protected Session getCurrentSession() {

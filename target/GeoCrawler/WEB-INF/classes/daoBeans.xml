@@ -13,10 +13,9 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 		<constructor-arg index="0" ref="dataSource" />
 		<constructor-arg index="1" value="resource" />
 	</bean>
-	
+
 	<!-- taskDaoImpl -->
-	<bean id="taskDaoImpl"
-		class="idv.ray.geocrawler.dao.TaskDaoImpl">
+	<bean id="taskDaoImpl" class="idv.ray.geocrawler.dao.TaskDaoImpl">
 		<constructor-arg index="0" ref="dataSource" />
 		<constructor-arg index="1" value="task" />
 	</bean>

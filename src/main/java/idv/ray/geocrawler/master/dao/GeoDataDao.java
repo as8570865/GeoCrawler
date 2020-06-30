@@ -1,14 +1,10 @@
 package idv.ray.geocrawler.master.dao;
 
-import java.util.List;
-
 import idv.ray.geocrawler.util.javabean.geodata.GeoData;
 
 public interface GeoDataDao<T extends GeoData> {
 
-	public T get(int id);
-
-	public List<T> getAll();
+	public T getById(int id);
 
 	public T insert(T geoData);
 
@@ -18,5 +14,5 @@ public interface GeoDataDao<T extends GeoData> {
 
 	public boolean isInitialized();
 
-	public boolean containsLink(String link);
+	public boolean contains(T geoData);
 }
