@@ -2,6 +2,7 @@ package idv.ray.geocrawler.master.monitor.controller;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.Duration;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,7 +27,9 @@ import idv.ray.geocrawler.master.monitor.service.WorkerService;
 import idv.ray.geocrawler.util.javabean.geodata.Resource;
 import idv.ray.geocrawler.util.javabean.geodata.Task;
 import idv.ray.geocrawler.util.javabean.httpbody.QueryResult;
+import idv.ray.geocrawler.util.javabean.worker.Worker;
 import idv.ray.geocrawler.util.json.GeoDataMixin;
+import idv.ray.geocrawler.util.json.JSONSerializer;
 
 @Controller
 @RequestMapping("/monitor")
@@ -46,7 +51,8 @@ public class MonitorController {
 	@Autowired
 	private WorkerService workerService;
 
-	@RequestMapping(value = "/{geoDataType}", produces = "application/json")
+	@CrossOrigin
+	@RequestMapping(value = "/{geoDataType}", produces = "application/json", method = RequestMethod.GET)
 	public ResponseEntity<String> get(@PathVariable("geoDataType") String geoDataType,
 			@RequestParam(value = "id", required = false, defaultValue = DEFAULT_ID_FOR_QUERY) int id,
 			@RequestParam(value = "geoType", required = false) String geoType,
@@ -81,7 +87,7 @@ public class MonitorController {
 		String returnJson;
 		try {
 			returnJson = qr.GeoDataSerialize();
-			
+
 		} catch (JsonProcessingException e) {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -89,7 +95,8 @@ public class MonitorController {
 		return new ResponseEntity<String>(returnJson, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/worker", produces = "application/json")
+	@CrossOrigin
+	@RequestMapping(value = "/worker", produces = "application/json", method = RequestMethod.GET)
 	public ResponseEntity<String> get(@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "ipAddress", required = false) String ipAddress) {
 
@@ -105,8 +112,10 @@ public class MonitorController {
 		return new ResponseEntity<String>(returnJson, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/test", produces = "application/json")
-	public void test() {
-		taskService.delete(null);
+	@RequestMapping(value = "/worker/idle", produces = "application/json")
+	public ResponseEntity<String> getIdleWorkers(@RequestParam(value = "duration") int idleDurationHrs)
+			throws JsonProcessingException {
+		List<Worker> workers = workerService.getIdleWorkers(Duration.ofHours(idleDurationHrs));
+		return new ResponseEntity<String>(JSONSerializer.serialize(workers), HttpStatus.OK);
 	}
 }

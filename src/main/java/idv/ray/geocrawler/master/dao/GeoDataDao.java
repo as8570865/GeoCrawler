@@ -15,4 +15,6 @@ public interface GeoDataDao<T extends GeoData> {
 	public boolean isInitialized();
 
 	public boolean contains(T geoData);
+	
+	public int getMaxLevel();
 }

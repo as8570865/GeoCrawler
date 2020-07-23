@@ -41,4 +41,11 @@ public class HiberResourceDaoImpl extends HiberGeoDataDaoAbst<Resource> implemen
 
 		return query.list();
 	}
+	
+	@Override
+	public int getMaxLevel() {
+		Session session = getCurrentSession();
+		Query query = session.createQuery("select max(r.level) from Resource r");
+		return (Integer)query.uniqueResult();
+	}
 }

@@ -1,6 +1,7 @@
 package idv.ray.geocrawler.master.crawler.controller;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -10,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,7 +29,7 @@ import idv.ray.geocrawler.master.crawler.service.RegisterService;
 import idv.ray.geocrawler.util.javabean.geodata.Task;
 import idv.ray.geocrawler.util.javabean.httpbody.CrawlerHttpBody;
 import idv.ray.geocrawler.util.javabean.worker.Worker;
-import idv.ray.geocrawler.util.json.GenericJsonSerializer;
+import idv.ray.geocrawler.util.json.JSONSerializer;
 
 @Controller
 public class CrawlerController {
@@ -87,8 +90,7 @@ public class CrawlerController {
 	public ResponseEntity<String> getGeoTypeSet() {
 
 		try {
-			return new ResponseEntity<String>(GenericJsonSerializer.serialize(crawlerService.getGeoTypeSet()),
-					HttpStatus.OK);
+			return new ResponseEntity<String>(JSONSerializer.serialize(crawlerService.getGeoTypeSet()), HttpStatus.OK);
 		} catch (JsonProcessingException e) {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
@@ -111,6 +113,15 @@ public class CrawlerController {
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
 
 		}
+	}
+
+	@CrossOrigin
+	@RequestMapping(value = "/queryCondition", produces = "application/json", method = RequestMethod.GET)
+	public ResponseEntity<String> get(@RequestParam(value = "type") String type) throws JsonProcessingException {
+
+		Map map = crawlerService.getQueryCondition(type);
+		ResponseEntity response = new ResponseEntity<String>(JSONSerializer.serialize(map), HttpStatus.OK);
+		return response;
 	}
 
 	@RequestMapping(value = "/test", method = RequestMethod.POST)

@@ -1,6 +1,10 @@
 package idv.ray.geocrawler.master.dao.hibernate;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -64,7 +68,26 @@ public class HiberWorkerImpl implements WorkerDao {
 	@Override
 	public void update(Worker worker) {
 		getCurrentSession().update(worker);
-		
+
+	}
+
+	@Override
+	public List<Worker> getIdle(Duration duration) {
+		ListIterator<Worker> workersIt = get(null, null).listIterator();
+
+		while (workersIt.hasNext()) {
+			Worker w = workersIt.next();
+			Duration idleDuration = Duration.between(w.getLastCrawlingTime(), LocalDateTime.now());
+			if (idleDuration.compareTo(duration) <= 0) {
+				workersIt.remove();
+			}
+		}
+
+		List<Worker> workers = new ArrayList();
+		while (workersIt.hasPrevious())
+			workers.add(workersIt.previous());
+		return workers;
+
 	}
 
 }

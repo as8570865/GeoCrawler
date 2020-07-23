@@ -87,5 +87,12 @@ public class HiberTaskDaoImpl extends HiberGeoDataDaoAbst<Task> implements TaskD
 
 		return query.list();
 	}
+	
+	@Override
+	public int getMaxLevel() {
+		Session session = getCurrentSession();
+		Query query = session.createQuery("select max(r.level) from Task r");
+		return (Integer)query.uniqueResult();
+	}
 
 }

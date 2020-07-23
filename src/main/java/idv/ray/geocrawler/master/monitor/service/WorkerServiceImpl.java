@@ -1,5 +1,6 @@
 package idv.ray.geocrawler.master.monitor.service;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,12 @@ public class WorkerServiceImpl implements WorkerService {
 	@Override
 	public List<Worker> get(String name, String ipAddress) {
 		return workerDao.get(name, ipAddress);
+	}
+
+	@Override
+	public List<Worker> getIdleWorkers(Duration duration) {
+		
+		return workerDao.getIdle(duration);
 	}
 
 }

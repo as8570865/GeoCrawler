@@ -1,5 +1,7 @@
 package idv.ray.geocrawler.master.crawler.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +13,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import idv.ray.geocrawler.exception.GeoCrawlerException;
 import idv.ray.geocrawler.exception.GeoCrawlerException.FailToInitializeException;
@@ -142,10 +146,10 @@ public class CrawlerServiceImpl implements CrawlerService {
 		setSrcTask(reqBody.getSrcTask());
 
 		// set previous task finished
-		Worker processingWorker=reqBody.getSrcTask().getWorker();
+		Worker processingWorker = reqBody.getSrcTask().getWorker();
 		srcTask.setFinished(processingWorker);
 		taskDao.update(srcTask);
-		//set the crawling time for the worker
+		// set the crawling time for the worker
 		processingWorker.setLastCrawlingTime(java.time.LocalDateTime.now());
 		workerDao.update(processingWorker);
 
@@ -169,6 +173,36 @@ public class CrawlerServiceImpl implements CrawlerService {
 	@Override
 	public Set<String> getGeoTypeSet() {
 		return seedMap.keySet();
+	}
+
+	@Override
+	public Map getQueryCondition(String type) throws JsonProcessingException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Worker> workerList = workerDao.get(null, null);
+		Integer resourceMaxLevel = resourceDao.getMaxLevel();
+		Integer taskMaxLevel = taskDao.getMaxLevel();
+		Set<String> geoTypeSet = seedMap.keySet();
+		List<String>statusList=new ArrayList();
+		statusList.add("ready");
+		statusList.add("running");
+		statusList.add("finished");
+
+		switch (type) {
+		case "resource":
+			map.put("geoTypeSet", geoTypeSet);
+			map.put("maxLevel", resourceMaxLevel);
+			map.put("workerList", workerList);
+		case "task":
+			map.put("geoTypeSet", geoTypeSet);
+			map.put("maxLevel", taskMaxLevel);
+			map.put("workerList", workerList);
+			map.put("statusList", statusList);
+		case "worker":
+			map.put("workerList", workerList);
+		}
+		
+		return map;
+
 	}
 
 }
