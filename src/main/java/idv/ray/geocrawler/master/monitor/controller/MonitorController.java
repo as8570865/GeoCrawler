@@ -112,6 +112,7 @@ public class MonitorController {
 		return new ResponseEntity<String>(returnJson, HttpStatus.OK);
 	}
 
+	@CrossOrigin
 	@RequestMapping(value = "/worker/idle", produces = "application/json")
 	public ResponseEntity<String> getIdleWorkers(@RequestParam(value = "duration") int idleDurationHrs)
 			throws JsonProcessingException {
