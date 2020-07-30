@@ -292,7 +292,12 @@
             time.innerHTML = resultJson.result[i].time;
             geotype.innerHTML = resultJson.result[i].geotype;
             srcTask.innerHTML = resultJson.result[i].srcTask;
-            workerName.innerHTML = resultJson.result[i].worker.name;
+            if(resultJson.result[i].worker!=null){
+                workerName.innerHTML = resultJson.result[i].worker.name;
+            }else{
+                workerName.innerHTML ="null";
+            }
+            
             status.innerHTML = resultJson.result[i].status;
         }
 
