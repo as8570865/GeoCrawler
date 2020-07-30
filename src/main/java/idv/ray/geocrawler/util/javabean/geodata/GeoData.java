@@ -3,32 +3,36 @@ package idv.ray.geocrawler.util.javabean.geodata;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.InetAddress;
+import java.time.LocalDateTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+import idv.ray.geocrawler.util.javabean.httpbody.Monitorable;
+import idv.ray.geocrawler.util.javabean.worker.Worker;
 import idv.ray.geocrawler.util.json.JSONSerializable;
 
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class GeoData implements JSONSerializable {
+public abstract class GeoData implements JSONSerializable, Monitorable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,24 +43,26 @@ public abstract class GeoData implements JSONSerializable {
 	@JsonProperty("level")
 	protected int level;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	@JsonProperty("link")
 	protected String link;
 
 	@JsonProperty("time")
-	protected long time;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	protected LocalDateTime time;
 
 	@Column(nullable = false)
-	@JsonProperty("geoType")
+	@JsonProperty("geotype")
 	protected String geoType;
 
 	@Column(nullable = false)
-	@JsonProperty("srcTaskId")
+	@JsonProperty("srctask_Id")
 	protected int srcTaskId;
 
-	@Column(nullable = true)
-	@JsonIgnore
-	protected String processorIp;
+	@JsonProperty("worker")
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "workIp",nullable = true)
+	protected Worker worker;
 
 	public GeoData() {
 
@@ -77,6 +83,11 @@ public abstract class GeoData implements JSONSerializable {
 		this.srcTaskId = srcTaskId;
 	}
 
+	public GeoData(int id, String link, int level, String geoType, int srcTaskId, Worker worker) {
+		this(id, link, level, geoType, srcTaskId);
+		this.worker = worker;
+	}
+
 	public int getSrcTaskId() {
 		return srcTaskId;
 	}
@@ -89,11 +100,11 @@ public abstract class GeoData implements JSONSerializable {
 		return geoType;
 	}
 
-	public long getTime() {
+	public LocalDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(long time) {
+	public void setTime(LocalDateTime time) {
 		this.time = time;
 	}
 
@@ -109,12 +120,12 @@ public abstract class GeoData implements JSONSerializable {
 		return link;
 	}
 
-	public String getProcessorIp() {
-		return processorIp;
+	public Worker getWorker() {
+		return worker;
 	}
 
-	public void setProcessorIp(String processorIp) {
-		this.processorIp = processorIp;
+	public void setWorker(Worker worker) {
+		this.worker = worker;
 	}
 
 	@JsonIgnore
@@ -131,12 +142,14 @@ public abstract class GeoData implements JSONSerializable {
 	@Override
 	public String serialize() throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
 		return mapper.writeValueAsString(this);
 	}
 
 	public static GeoData deserialize(String json, Class<? extends GeoData> clazz)
 			throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
 		Reader reader = new StringReader(json);
 		return mapper.readValue(reader, clazz);
 	}

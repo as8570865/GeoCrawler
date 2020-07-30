@@ -20,19 +20,19 @@ public class SOS implements RequestBasedGeoStandard {
 	public boolean isGeoResource(String capabilitiesUrl) {
 
 		Document doc;
+
 		try {
 			doc = Jsoup.connect(capabilitiesUrl).timeout(10 * 1000).ignoreHttpErrors(true).get();
+
 			if (doc.toString().contains("</sos:Capabilities") || doc.toString().contains("</Capabilities")
 					|| doc.toString().contains("</Capability")) {
 				System.out.println("this is geoResource!!");
 				return true;
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		} catch (IOException e) {
 			e.printStackTrace();
 
 		}
@@ -42,7 +42,7 @@ public class SOS implements RequestBasedGeoStandard {
 
 	@Override
 	public String getCapabilitiesUrl(String url) {
-		return url+REQUEST_STATEMENT;
+		return url + REQUEST_STATEMENT;
 	}
 
 }

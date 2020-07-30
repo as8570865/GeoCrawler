@@ -1,11 +1,16 @@
 package idv.ray.geocrawler.util.javabean.geodata;
 
+import java.io.IOException;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import idv.ray.geocrawler.util.javabean.worker.Worker;
 
 @Entity
 public class Task extends GeoData {
@@ -34,6 +39,11 @@ public class Task extends GeoData {
 		super(id, link, level, geoType, srcTaskId);
 	}
 
+	public Task(int id, String link, int level, String geoType, Status status, int srcTaskId, Worker worker) {
+		super(id, link, level, geoType, srcTaskId, worker);
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
 		return "Task [status=" + status + ", id=" + id + ", level=" + level + ", link=" + link + ", time=" + time
@@ -48,8 +58,8 @@ public class Task extends GeoData {
 		this.status = Status.RUNNING;
 	}
 
-	public void setFinished(String processorIp) {
-		this.processorIp = processorIp;
+	public void setFinished(Worker worker) {
+		this.worker = worker;
 		this.status = Status.FINISHED;
 	}
 

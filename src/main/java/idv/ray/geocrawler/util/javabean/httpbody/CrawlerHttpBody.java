@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import idv.ray.geocrawler.util.javabean.geodata.Task;
 
@@ -60,12 +61,14 @@ public class CrawlerHttpBody implements HttpBody {
 	@Override
 	public String serialize() throws JsonProcessingException {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
 		return mapper.writeValueAsString(this);
 	}
 
 	public static CrawlerHttpBody deserialize(String json)
 			throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
+		mapper.registerModule(new JavaTimeModule());
 		Reader reader = new StringReader(json);
 		return mapper.readValue(reader, CrawlerHttpBody.class);
 	}
