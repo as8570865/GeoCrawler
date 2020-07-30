@@ -53,11 +53,13 @@ public class Crawler {
 					if (temp.startsWith("/url?q=")) {
 						// use regex to get domain name
 						String urlString = urlFilter.getDomainName(temp);
-						if (!result.contains(urlString)) {
-							if (urlFilter.isCorrectFormat(urlString)) {
-								System.out.println("get this url: " + urlString);
-								System.out.println("/////////");
-								result.add(urlString);
+						if (urlString.length() < 255) {
+							if (!result.contains(urlString)) {
+								if (urlFilter.isCorrectFormat(urlString)) {
+									System.out.println("get this url: " + urlString);
+									System.out.println("/////////");
+									result.add(urlString);
+								}
 							}
 						}
 					}
@@ -90,12 +92,14 @@ public class Crawler {
 
 				// get attribute href and convert to specific format
 				String urlString = urlFilter.getDomainName(link.attr("href"));
-				if (!result.contains(urlString)) {
-					if (urlFilter.isCorrectFormat(urlString)) {
-						result.add(urlString);
-						System.out.println("get this url: " + urlString);
-						System.out.println("/////////");
+				if (urlString.length() < 255) {
+					if (!result.contains(urlString)) {
+						if (urlFilter.isCorrectFormat(urlString)) {
+							result.add(urlString);
+							System.out.println("get this url: " + urlString);
+							System.out.println("/////////");
 
+						}
 					}
 				}
 
@@ -123,31 +127,5 @@ public class Crawler {
 		return maxPageNum;
 	}
 
-	public static void main(String[] args) throws IOException {
-		Set<String> notOkFormat = new HashSet<String>();
-		notOkFormat.add("application/pdf");
-
-		ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
-//		Crawler c = (Crawler) context.getBean("crawler");
-//
-//		Set<String> crawlResult = c.crawlByUrl("https://www.bgs.ac.uk/data/services/geolwms.html");
-//		// SOS sos = new SOS();
-//		WMS wms = new WMS();
-//		for (String url : crawlResult) {
-//			System.out.println("url: " + url);
-//			if (wms.isGeoResource(url)) {
-//				System.out.println("geo resource: " + url);
-//			}
-//		}
-
-		UrlFilter urlFilter = (UrlFilter) context.getBean("urlFilter");
-
-//		Set<String> s = (Set<String>) context.getBean("unacceptableUrlFormatSet");
-//		System.out.println(s);
-
-//		String[] beans = context.getBeanDefinitionNames();
-//		for (String s : beans)
-//			System.out.println(s);
-	}
 
 }

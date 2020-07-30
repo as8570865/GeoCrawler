@@ -31,11 +31,6 @@ public class UrlFilter {
 	private String domainNamePatternString;
 	private Pattern patternDomainName;
 
-	@Bean
-	public UrlFilter urlFilter() {
-		return new UrlFilter();
-	}
-
 	@PostConstruct
 	public void init() {
 		patternDomainName = Pattern.compile(domainNamePatternString);

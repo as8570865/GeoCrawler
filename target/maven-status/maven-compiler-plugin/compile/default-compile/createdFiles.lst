@@ -1,0 +1,9 @@
+idv\ray\geocrawler\worker\exception\GeoCrawlerWorkerException$CrawledResultException.class
+idv\ray\geocrawler\worker\exception\GeoCrawlerWorkerException.class
+idv\ray\geocrawler\worker\core\WorkerRunner.class
+idv\ray\geocrawler\worker\exception\GeoCrawlerWorkerException$FailToGetNextTaskException.class
+idv\ray\geocrawler\worker\core\UrlFilter.class
+idv\ray\geocrawler\worker\exception\GeoCrawlerWorkerException$FailToRegisterException.class
+idv\ray\geocrawler\worker\core\MasterConnector.class
+idv\ray\geocrawler\worker\core\Crawler.class
+idv\ray\geocrawler\worker\exception\GeoCrawlerWorkerException$MasterException.class
